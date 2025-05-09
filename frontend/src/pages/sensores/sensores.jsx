@@ -71,11 +71,9 @@ export default function Sensores(){
                     sensor: newSensor.sensor,
                     mac_adress: newSensor.mac_adress,
                     unidade_med: newSensor.unidade_med,
-                    valor: newSensor.valor,
                     latitude: newSensor.latitude,
                     longitude: newSensor.longitude,
                     status: newSensor.status,
-                    timestamp: newSensor.timestamp
 
                 },{
                     headers:{
@@ -155,11 +153,9 @@ export default function Sensores(){
                                             <th className="p-5 border-r-2 border-gray-200">NAME</th>
                                             <th className="p-5 border-r-2 border-gray-200">MAC</th>
                                             <th className="p-5 border-r-2 border-gray-200">UN. MED</th>
-                                            <th className="p-5 border-r-2 border-gray-200">VALOR</th>
                                             <th className="p-5 border-r-2 border-gray-200">LATITUDE</th>
                                             <th className="p-5 border-r-2 border-gray-200">LONGITUDE</th>
                                             <th className="p-5 border-r-2 border-gray-200">STATUS</th>
-                                            <th className="p-5 border-r-2 border-gray-200">TIMESTAMP</th>
                                         </tr>
 
                                     </thead>
@@ -178,11 +174,9 @@ export default function Sensores(){
                                                 <td className="p-5 border-l-2 border-gray-200">{sensor.sensor}</td>
                                                 <td className="p-5 border-l-2 border-gray-200">{sensor.mac_adress}</td>
                                                 <td className="p-5 border-l-2 border-gray-200">{sensor.unidade_med}</td>
-                                                <td className="p-5 border-l-2 border-r-2 border-gray-200">{sensor.valor}</td>
                                                 <td className="p-5 border-l-2 border-gray-200">{sensor.latitude}</td>
                                                 <td className="p-5 border-l-2 border-gray-200">{sensor.longitude}</td>
                                                 <td className="p-5 border-l-2 border-gray-200">{sensor.status}</td>
-                                                <td className="p-5 border-l-2 border-r-2 border-gray-200">{sensor.timestamp}</td>
                                             </tr>
                                         ))}
                                     </tbody>

@@ -8,7 +8,9 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 from django.contrib.auth.models import User
-
+from rest_framework.parsers import MultiPartParser
+from rest_framework.views import APIView
+from openpyxl import load_workbook
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -94,3 +96,70 @@ class HistoricosDetailView(RetrieveUpdateDestroyAPIView):
 class SignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class UploadXLSXViewAmbiente(APIView):
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        file_obj = request.FILES.get('file')
+
+        if not file_obj:
+            return Response({'erro': 'Arquivo não enviado'}, status=400)
+
+        wb = load_workbook(filename=file_obj)
+        ws = wb.active  # primeira aba
+        
+        for i, row in enumerate(ws.iter_rows(min_row=2, values_only=True)):  # pula o cabeçalho
+            sig = str(row[0]).strip() if row[0] is not None else None
+            descricao = str(row[1]).strip() if row[1] is not None else None
+            ni = str(row[2]).strip() if row[2] is not None else None
+            responsavel = str(row[3]).strip() if row[3] is not None else None
+            
+            if not ni:
+                    print(f"[Linha {i+2}] Erro: ni vazio. Dados: {row}")
+                
+            Ambiente.objects.create(
+                sig=row[0],
+                descricao=row[1],
+                ni=row[2],
+                responsavel=row[3],
+            )
+
+        return Response({'mensagem': 'Dados importados com sucesso!'})
+    
+
+
+class UploadXLSXViewSensores(APIView):
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        file_obj = request.FILES.get('file')
+
+        if not file_obj:
+            return Response({'erro': 'Arquivo não enviado'}, status=400)
+
+        wb = load_workbook(filename=file_obj)
+        ws = wb.active  # primeira aba
+            
+        for i, row in enumerate(ws.iter_rows(min_row=2, values_only=True)):  # pula o cabeçalho
+            sensor = str(row[0]).strip() if row[0] is not None else None
+            mac_adress = str(row[1]).strip() if row[1] is not None else None
+            unidade_med = str(row[2]).strip() if row[2] is not None else None
+            latitude = str(row[3]).strip() if row[3] is not None else None
+            longitude = str(row[4]).strip() if row[4] is not None else None
+            status = str(row[5]).strip() if row[5] is not None else None
+                
+            if not sensor:
+                    print(f"[Linha {i+2}] Erro: sensor vazio. Dados: {row}")
+                    
+            Sensor.objects.create(
+                sensor = row[0],
+                mac_adress = row[1],
+                unidade_med = row[2],
+                latitude = row[3],
+                longitude = row[4],
+                status = bool(row[5]),
+            )
+
+        return Response({'mensagem': 'Dados importados com sucesso!'})

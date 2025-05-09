@@ -14,11 +14,9 @@ const ModalSensors = ({
     const [sensor, setSensor] = useState(selectedSensor?.sensor ?? '');
     const [mac_adress, setMacAdress] = useState(selectedSensor?.mac_adress ?? '');
     const [unidade_med, setUnidadeMed] = useState(selectedSensor?.unidade_med ?? '');
-    const [valor, setValor] = useState(selectedSensor?.valor ?? '');
     const [latitude, setLatitude] = useState(selectedSensor?.latitude ?? '');
     const [longitude, setLongitude] = useState(selectedSensor?.longitude ?? '');
     const [status, setStatus] = useState(selectedSensor?.status ?? '');
-    const [timestamp, setTimestamp] = useState(selectedSensor?.timestamp ?? '');
     
     const token = localStorage.getItem('token')
 
@@ -37,11 +35,9 @@ const ModalSensors = ({
                     sensor: sensor,
                     mac_adress: mac_adress,
                     unidade_med: unidade_med,
-                    valor: valor,
                     latitude: latitude,
                     longitude: longitude,
                     status: status,
-                    timestamp: timestamp
                 }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -65,12 +61,9 @@ const ModalSensors = ({
                 sensor: sensor,
                 mac_adress: mac_adress,
                 unidade_med: unidade_med,
-                valor: valor,
                 latitude: latitude,
                 longitude: longitude,
                 status: status,
-                timestamp: timestamp
-
             });
 
             await axios.put(`http://127.0.0.1:8000/api/sensor/${selectedSensor.id}`,
@@ -78,11 +71,9 @@ const ModalSensors = ({
                     sensor: sensor,
                     mac_adress: mac_adress,
                     unidade_med: unidade_med,
-                    valor: valor,
                     latitude: latitude,
                     longitude: longitude,
                     status: status,
-                    timestamp: timestamp
                 },
                 {
                     headers: {
@@ -132,15 +123,7 @@ const ModalSensors = ({
                                     placeholder="Sensors unidade med"
                                     onChange={(e) => setUnidadeMed(e.target.value)}
                                 />
-
-
-                                <input
-                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[8vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={valor}
-                                    placeholder="Sensors valor"
-                                    onChange={(e) => setValor(e.target.value)}
-                                />
-
+                                
 
                                 <input
                                     className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
@@ -163,15 +146,6 @@ const ModalSensors = ({
                                     placeholder="Sensors status"
                                     onChange={(e) => setStatus(e.target.value)}
                                 />
-
-
-                                <input
-                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[8vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={timestamp}
-                                    placeholder="Sensors timestamp"
-                                    onChange={(e) => setTimestamp(e.target.value)}
-                                />
-
 
                             </div>
 

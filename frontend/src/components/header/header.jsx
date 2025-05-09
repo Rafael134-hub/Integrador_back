@@ -17,7 +17,9 @@ export default function Header(){
                     <img src={potaxie} className="w-[100%] h-[9vh]"></img>
                 </div>
 
-                <nav className=" w-[40vw] flex justify-between items-center text-xl">
+                <nav className=" w-[60vw] flex justify-between items-center text-xl">
+                    <Link to={'/upload_ambients'}><p className="hover:text-teal-800">Importar Exel</p></Link>
+                    <Link to={'/upload_sensores'}><p className="hover:text-teal-800">Importar Exel 2</p></Link>
                     <Link to={'/home'}><p className="hover:text-teal-800">Home</p></Link>
                     <Link to={'/sensores'}><p className="hover:text-teal-800">Sensores</p></Link>
                     <Link to={'/ambientes'}><p className="hover:text-teal-800">Ambientes</p></Link>

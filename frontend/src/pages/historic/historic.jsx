@@ -145,7 +145,7 @@ export default function Historic(){
                     <h1 className="text-[40px] font-bold text-center mt-[6vh] text-sky-600 mb-[8vh]">Historics!</h1>
 
                     <div className="flex items-center justify-center mb-[4vh]">
-                        <div className="w-[80vw] flex items-center justify-between cursor-pointer">
+                        <div className="w-[90vw] flex items-center justify-between cursor-pointer">
 
                             <div>
                                 
@@ -183,7 +183,7 @@ export default function Historic(){
                     <div className="mb-[12vh]">
                         <div className="flex justify-center items-center">
                             <div className="rounded-4xl">
-                                <table className="w-[80vw]">
+                                <table className="w-[90vw]">
                                 <thead className="border-b-2 text-[18px] font-normal text-white bg-teal-700">
             
                                         <tr>
@@ -191,7 +191,8 @@ export default function Historic(){
                                             <th className="p-5 border-r-2 border-gray-200">DELETE</th>
                                             <th className="p-5 border-r-2 border-gray-200">SENSOR</th>
                                             <th className="p-5 border-r-2 border-gray-200">AMBIENT</th>
-                                            <th className="p-5 border-r-2 border-gray-200">OBSERVATIONS</th>
+                                            <th className="p-5 border-r-2 border-gray-200">TIMESTAMP</th>
+                                            <th className="p-5 border-r-2 border-gray-200">VALUE</th>
                                         </tr>
 
                                     </thead>
@@ -209,7 +210,8 @@ export default function Historic(){
 
                                                 <td className="p-5 border-l-2 border-gray-200">{get_name_sensor(historic.id_sensor)}</td>
                                                 <td className="p-5 border-l-2 border-gray-200">{get_name_ambiente(historic.id_ambiente)}</td>
-                                                <td className="p-5 border-l-2 border-gray-200">{historic.observacoes}</td>
+                                                <td className="p-5 border-l-2 border-gray-200">{historic.timestamp}</td>
+                                                <td className="p-5 border-l-2 border-gray-200">{historic.valor}</td>
                                             </tr>
                                         ))}
                                     </tbody>

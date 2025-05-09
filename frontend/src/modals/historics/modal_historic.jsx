@@ -13,7 +13,8 @@ const ModalHistorics = ({
     const [id, setId] = useState(selectedHistoric?.id ?? '');
     const [id_sensor, setIdSensor] = useState(selectedHistoric?.id_sensor ?? '');
     const [id_ambiente, setIdAmbiente] = useState(selectedHistoric?.id_ambiente ?? '');
-    const [observacoes, setObservacoes] = useState(selectedHistoric?.observacoes ?? '');
+    const [valor, setValor] = useState(selectedHistoric?.valor ?? '');
+    const [timestamp, setTimestamp] = useState(selectedHistoric?.timestamp ?? '');
 
     const token = localStorage.getItem('token')
 
@@ -31,7 +32,8 @@ const ModalHistorics = ({
                 {
                     id_sensor: id_sensor,
                     id_ambiente: id_ambiente,
-                    observacoes: observacoes
+                    valor: valor,
+                    timestamp: timestamp
 
                 }, {
                 headers: {
@@ -57,7 +59,8 @@ const ModalHistorics = ({
                 {
                     id_sensor: id_sensor,
                     id_ambiente: id_ambiente,
-                    observacoes: observacoes
+                    valor: valor,
+                    timestamp: timestamp
                 },
                 {
                     headers: {
@@ -103,10 +106,20 @@ const ModalHistorics = ({
 
                                 <input
                                     className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={observacoes}
-                                    placeholder="Observation"
-                                    onChange={(e) => setObservacoes(e.target.value)}
+                                    value={timestamp}
+                                    placeholder="Timestamp"
+                                    onChange={(e) => setTimestamp(e.target.value)}
                                 />
+
+
+                                <input
+                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
+                                    value={valor}
+                                    placeholder="Valor"
+                                    onChange={(e) => setValor(e.target.value)}
+                                />
+
+
 
 
                             </div>

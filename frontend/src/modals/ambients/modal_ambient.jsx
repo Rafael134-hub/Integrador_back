@@ -30,7 +30,7 @@ const ModalAmbients = ({
             await axios.post('http://127.0.0.1:8000/api/ambientes',
 
                 {
-                    sig: sig,
+                    sig: parseInt(sig),
                     descricao: descricao,
                     ni: ni,
                     responsavel: responsavel
@@ -98,9 +98,12 @@ const ModalAmbients = ({
                                 <input
                                     className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
                                     value={sig}
+                                    type="number"
                                     placeholder="Ambient sig"
                                     onChange={(e) => setSig(e.target.value)}
                                 />
+
+                                
                                 <input
                                     className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
                                     value={ni}

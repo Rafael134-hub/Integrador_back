@@ -12,15 +12,15 @@ const FilterAmbients = ({
 
     const [isNameOpen, setIsNameOpen] = useState(false);
     const [isIDOpen, setIsIDOpen] = useState(false);
-    const [idContent, setIdContent] = useState("");
+    const [sigContent, setSigContent] = useState();
     const [nameContent, setNameContent] = useState("");
 
     function filterData() {
         let filteredData = originalDataFilter;
     
-        if (idContent.trim() !== "") {
+        if (sigContent.trim() !== "" && sigContent != NaN) {
             filteredData = filteredData.filter((item) =>
-                item.sig === idContent.trim()
+                item.sig === parseInt(sigContent.trim())
             );
         }
     
@@ -52,7 +52,7 @@ const FilterAmbients = ({
                         <div>
                             {isIDOpen == true ? (
                                 <div className="flex items-center justify-between mt-4 pb-1">
-                                    <input placeholder="Type the ambient SLG" value={idContent} onChange={(e) => setIdContent(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
+                                    <input placeholder="Type the ambient SLG" value={sigContent} onChange={(e) => setSigContent(e.target.value)} type="number" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
                                     <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
 
                                 </div>
@@ -86,7 +86,7 @@ const FilterAmbients = ({
                         <div className="flex items-center p-2 rounded-xl duration-150 ease-in-out hover:bg-teal-600 hover:scale-115 hover:ml-2" onClick={() => {
                             setDadosFilter(originalDataFilter);
                             setNameContent("");
-                            setIdContent("");
+                            setSigContent("");
                         }}>
                             <RiResetLeftFill className="text-white text-2xl mr-2"></RiResetLeftFill>
                             <p className="text-[16px] text-white">Remove all filters</p>
@@ -96,7 +96,7 @@ const FilterAmbients = ({
                             () => {
                                 onFilterClose();
                                 setNameContent("");
-                                setIdContent("");
+                                setSigContent();
                             }}>x</p>
 
                     </div>

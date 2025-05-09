@@ -15,7 +15,6 @@ export default function Ambients(){
     const [modalOpen, setModalOpen] = useState(false);
     const [filterlOpen, setFilterlOpen] = useState(false);
     const [selectedAmbient, setSelectedAmbient] = useState(null);
-    const [arrow2, setArrow2] = useState(false);;
 
     useEffect(() => {
 
@@ -109,7 +108,6 @@ export default function Ambients(){
                                 <div className="flex items-center justify-between w-[6.6vw] rounded-2xl p-3 duration-200 hover:bg-emerald-100 hover:scale-110 hover:ml-1" onClick={()=>{
                                     filterlOpen == false?
                                     setFilterlOpen(true)
-                                    
                                     :setFilterlOpen(false);
                                 
                                     }}>

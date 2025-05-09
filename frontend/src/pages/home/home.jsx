@@ -14,24 +14,24 @@ export default function Home(){
                     <h2 className="text-center mt-[2vh] text-2xl">What would you like to do?</h2>
 
                     <div className="flex justify-center items-center mb-[25vh]">
-                        <div className="mt-[8vh] w-[70vw] flex justify-between items-cenater text-white">
+                        <div className="mt-[8vh] w-[60vw] flex justify-between items-cenater text-white">
                             
                             <Link to={"/sensores"}>
-                                <div className="bg-teal-700 h-[30vh] w-[15vw] flex items-center justify-center text-center rounded-3xl">
+                                <div className="bg-teal-700 h-[30vh] w-[15vw] flex items-center justify-center text-center rounded-3xl duration-200 ease-in-out hover:scale-110">
                                     <h3 className="font-bold text-xl">Manage Sensores</h3>
                                 </div>
                             </Link>
 
 
                             <Link to={"/ambientes"}>
-                                <div className="bg-teal-600 h-[30vh] w-[15vw] flex items-center justify-center text-center rounded-3xl">
+                                <div className="bg-teal-600 h-[30vh] w-[15vw] flex items-center justify-center text-center rounded-3xl duration-200 ease-in-out hover:scale-110">
                                     <h3 className="font-bold text-xl">Manage Ambients</h3>
                                 </div>
                             </Link>
 
 
                             <Link to={"/historics"}>
-                                <div className="bg-sky-600 h-[30vh] w-[15vw] flex items-center justify-center text-center rounded-3xl">
+                                <div className="bg-sky-600 h-[30vh] w-[15vw] flex items-center justify-center text-center rounded-3xl duration-200 ease-in-out hover:scale-110">
                                     <h3 className="font-bold text-xl">Manage Historics</h3>
                                 </div>
                             </Link>

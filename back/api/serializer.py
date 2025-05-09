@@ -26,7 +26,7 @@ class Historico_serializer(serializers.ModelSerializer):
 
     class Meta:
         model = Historico
-        fields = ["id", "sensor", "id_sensor", "ambiente", "id_ambiente", "observacoes"]
+        fields = ["id", "id_sensor", "sensor", "id_ambiente", "ambiente", "valor", "timestamp"]
 
 
 class UserSerializer(serializers.ModelSerializer):
