@@ -27,7 +27,7 @@ const ModalHistorics = ({
     const newHistoric = async () => {
 
         try {
-            await axios.post('http://127.0.0.1:8000/api/historicos',
+            await axios.post('http://127.0.0.1:8000/api/historicos/',
 
                 {
                     id_sensor: id_sensor,
@@ -55,7 +55,7 @@ const ModalHistorics = ({
     const editHistoric = async () => {
         try {
 
-            await axios.put(`http://127.0.0.1:8000/api/historico/${selectedHistoric.id}`,
+            await axios.put(`http://127.0.0.1:8000/api/historico/${selectedHistoric.id}/`,
                 {
                     id_sensor: id_sensor,
                     id_ambiente: id_ambiente,

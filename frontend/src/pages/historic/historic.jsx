@@ -25,7 +25,7 @@ export default function Historic(){
         
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/historicos',
+                const response = await axios.get('http://127.0.0.1:8000/api/historicos/',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -52,7 +52,7 @@ export default function Historic(){
         
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/sensores',
+                const response = await axios.get('http://127.0.0.1:8000/api/sensores/',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -78,7 +78,7 @@ export default function Historic(){
         
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/ambientes',
+                const response = await axios.get('http://127.0.0.1:8000/api/ambientes/',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -100,7 +100,7 @@ export default function Historic(){
     const delete_historic = async (id) => {
         if (window.confirm("Are u sure?")) {
             try {
-                await axios.delete(`http://127.0.0.1:8000/api/historico/${id}`,
+                await axios.delete(`http://127.0.0.1:8000/api/historico/${id}/`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`

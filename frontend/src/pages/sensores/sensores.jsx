@@ -25,7 +25,7 @@ export default function Sensores(){
         
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/sensores',
+                const response = await axios.get('http://127.0.0.1:8000/api/sensores/',
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -47,7 +47,7 @@ export default function Sensores(){
     const delete_sensor = async (id) => {
         if (window.confirm("Are u sure?")) {
             try {
-                await axios.delete(`http://127.0.0.1:8000/api/sensor/${id}`,
+                await axios.delete(`http://127.0.0.1:8000/api/sensor/${id}/`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -65,7 +65,7 @@ export default function Sensores(){
     const create_sensor = async(newSensor)=>{
         console.log("New sensor: ", newSensor)
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/sensores',
+            const response = await axios.post('http://127.0.0.1:8000/api/sensores/',
                 
                 {   
                     sensor: newSensor.sensor,
@@ -128,6 +128,7 @@ export default function Sensores(){
                                     dadosFilter = {data}
                                     setDadosFilter={setData}
                                     onFilterClose={()=>setFilterlOpen(false)}
+                                    token = {token}
                                 />
                                 
                             </div>

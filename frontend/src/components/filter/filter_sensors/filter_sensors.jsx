@@ -9,30 +9,32 @@ const FilterSensors = ({
     originalDataFilter,
     dadosFilter,
     setDadosFilter,
+    token,
 }) => {
     if (!isFilterOpen) return null;
 
-    const [isNameOpen, setIsNameOpen] = useState(false);
-    const [isIDOpen, setIsIDOpen] = useState(false);
-    const [idContent, setIdContent] = useState("");
-    const [nameContent, setNameContent] = useState("");
+    const [isMacAdressOpen, setIsMacAdressOpen] = useState(false);
+    const [isStatusOpen, setIsStatusOpen] = useState(false);
+    const [isSensorOpen, setIsSensorOpen] = useState(false);
+    const [status, setStatus] = useState("");
+    const [sensor, setSensor] = useState("");
+    const [macAdress, setMacAdress] = useState("");
 
     function filterData() {
-        let filteredData = originalDataFilter;
-    
-        if (idContent.trim() !== "") {
-            filteredData = filteredData.filter((item) =>
-                item.mac_adress === idContent.trim()
-            );
-        }
-    
-        if (nameContent.trim() !== "") {
-            filteredData = filteredData.filter((item) =>
-                item.sensor.toLowerCase().includes(nameContent.toLowerCase().trim())
-            );
-        }
-    
-        setDadosFilter(filteredData);
+        try {
+            const response = axios.get(`http://127.0.0.1:8000/api/sensores/?mac_adress=${macAdress}&status=${status}&sensor=${sensor}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            setDadosFilter(response.data);
+            console.log("Datah: ", data);
+            
+        } catch (error) {
+            console.log(error)
+        } 
     }
 
     
@@ -46,15 +48,15 @@ const FilterSensors = ({
 
                         <div className="flex items-center justify-between">
                             <p className="text-white text-l">Sensors MAC Adress</p>
-                            {isIDOpen == true ? (
-                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsIDOpen(false)}></RiArrowDropUpLine>
-                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsIDOpen(true)}></RiArrowDropDownLine>}
+                            {isMacAdressOpen == true ? (
+                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsMacAdressOpen(false)}></RiArrowDropUpLine>
+                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsMacAdressOpen(true)}></RiArrowDropDownLine>}
 
                         </div>
                         <div>
-                            {isIDOpen == true ? (
+                            {isMacAdressOpen == true ? (
                                 <div className="flex items-center justify-between mt-4 pb-1">
-                                    <input placeholder="Type the ambient SLG" value={idContent} onChange={(e) => setIdContent(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
+                                    <input placeholder="Type the ambient SLG" value={macAdress} onChange={(e) => setMacAdress(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
                                     <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
 
                                 </div>
@@ -66,16 +68,36 @@ const FilterSensors = ({
                     <div className="bg-teal-600 mb-[4vh] mt-[1.5rem] p-[0.5rem] rounded-xl">
 
                         <div className="flex items-center justify-between">
-                            <p className="text-white text-l">Sensors name</p>
-                            {isNameOpen == true ? (
-                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsNameOpen(false)}></RiArrowDropUpLine>
-                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsNameOpen(true)}></RiArrowDropDownLine>}
+                            <p className="text-white text-l">Sensors type</p>
+                            {isSensorOpen == true ? (
+                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsSensorOpen(false)}></RiArrowDropUpLine>
+                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsSensorOpen(true)}></RiArrowDropDownLine>}
 
                         </div>
                         <div>
-                            {isNameOpen == true ? (
+                            {isSensorOpen == true ? (
                                 <div className="flex items-center justify-between mt-4 pb-1">
-                                    <input placeholder="Type the ambient description" value={nameContent} onChange={(e) => setNameContent(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
+                                    <input placeholder="Type the ambient description" value={sensor} onChange={(e) => setSensor(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
+                                    <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
+
+                                </div>
+                            ) : null}
+                        </div>
+                    </div>
+
+                    <div className="bg-teal-600 mb-[4vh] mt-[1.5rem] p-[0.5rem] rounded-xl">
+
+                        <div className="flex items-center justify-between">
+                            <p className="text-white text-l">Sensors status</p>
+                            {isStatusOpen == true ? (
+                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsStatusOpen(false)}></RiArrowDropUpLine>
+                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsStatusOpen(true)}></RiArrowDropDownLine>}
+
+                        </div>
+                        <div>
+                            {isStatusOpen == true ? (
+                                <div className="flex items-center justify-between mt-4 pb-1">
+                                    <input placeholder="Type the ambient description" value={status} onChange={(e) => setStatus(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
                                     <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
 
                                 </div>
@@ -87,8 +109,9 @@ const FilterSensors = ({
 
                         <div className="flex items-center p-2 rounded-xl duration-150 ease-in-out hover:bg-teal-600 hover:scale-115 hover:ml-2" onClick={() => {
                             setDadosFilter(originalDataFilter);
-                            setNameContent("");
-                            setIdContent("");
+                            setStatus("");
+                            setMacAdress("");
+                            setSensor("");
                         }}>
                             <RiResetLeftFill className="text-white text-2xl mr-2"></RiResetLeftFill>
                             <p className="text-[16px] text-white">Remove all filters</p>
@@ -97,8 +120,9 @@ const FilterSensors = ({
                         <p className="text-white text-3xl cursor-pointer duration-100 easy-in-out hover:scale-125 pr-1" onClick={
                             () => {
                                 onFilterClose();
-                                setNameContent("");
-                                setIdContent("");
+                                setStatus("");
+                            setMacAdress("");
+                            setSensor("");
                             }}>x</p>
 
                     </div>

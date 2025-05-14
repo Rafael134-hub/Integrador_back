@@ -11,6 +11,9 @@ from django.contrib.auth.models import User
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
 from openpyxl import load_workbook
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import *
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -31,12 +34,14 @@ class SensoresView(ListCreateAPIView):
     queryset = Sensor.objects.all()
     serializer_class = Sensor_serializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_class = Sensores_filter
 
 class SensoresDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Sensor.objects.all()
     serializer_class = Sensor_serializer
     permission_classes = [IsAuthenticated]
-
+    
 
 
 @api_view(['GET', 'POST'])
@@ -58,6 +63,8 @@ class AmbientesView(ListCreateAPIView):
     queryset = Ambiente.objects.all()
     serializer_class = Ambiente_serializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_class = Ambientes_filter
 
 class AmbientesDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Ambiente.objects.all()
