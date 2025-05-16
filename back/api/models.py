@@ -8,7 +8,6 @@ class Sensor(models.Model):
     longitude = models.FloatField()
     status = models.BooleanField()
    
-
 class Ambiente(models.Model):
     sig = models.IntegerField()
     descricao = models.CharField(max_length=255)

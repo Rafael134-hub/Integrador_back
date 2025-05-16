@@ -13,6 +13,7 @@ from rest_framework.views import APIView
 from openpyxl import load_workbook
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import get_object_or_404
 from .filters import *
 
 @api_view(['GET', 'POST'])
@@ -92,12 +93,14 @@ class HistoricosView(ListCreateAPIView):
     queryset = Historico.objects.all()
     serializer_class = Historico_serializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_class = Historicos_filter
+    
 
 class HistoricosDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Historico.objects.all()
     serializer_class = Historico_serializer
     permission_classes = [IsAuthenticated]
-
 
 
 class SignUpView(generics.CreateAPIView):
@@ -170,3 +173,45 @@ class UploadXLSXViewSensores(APIView):
             )
 
         return Response({'mensagem': 'Dados importados com sucesso!'})
+    
+    
+class UploadXLSXViewHistoricos(APIView):
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        file_obj = request.FILES.get('file')
+
+        if not file_obj:
+            return Response({'erro': 'Arquivo não enviado'}, status=400)
+
+        wb = load_workbook(filename=file_obj)
+        ws = wb.active  # primeira aba
+            
+        for i, row in enumerate(ws.iter_rows(min_row=2, values_only=True)):  # pula o cabeçalho
+            id_ambiente = str(row[0]).strip() if row[0] is not None else None
+            id_sensor = str(row[1]).strip() if row[1] is not None else None
+            timestamp = str(row[2]).strip() if row[2] is not None else None
+            valor = str(row[3]).strip() if row[3] is not None else None
+                
+            if not valor:
+                    print(f"[Linha {i+2}] Erro: sensor vazio. Dados: {row}")
+                    
+            try:
+                id_ambiente = get_object_or_404(Ambiente, id=int(row[0]))
+                id_sensor = get_object_or_404(Sensor, id=int(row[1]))
+                timestamp = int(row[2])  # ou convertê-lo para datetime, se for o caso
+                valor = float(row[3])
+
+                Historico.objects.create(
+                    id_ambiente=id_ambiente,
+                    id_sensor=id_sensor,
+                    timestamp=timestamp,
+                    valor=valor
+                )
+
+            except Exception as e:
+                print(f"[Linha {i+2}] Erro ao processar linha: {e}. Dados: {row}")
+
+        return Response({'mensagem': 'Dados importados com sucesso!'})
+
+ 
