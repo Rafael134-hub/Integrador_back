@@ -31,6 +31,12 @@ class Historicos_filter(django_filters.FilterSet):
         fields = ['id_ambiente', 'id_sensor', 'data', 'hora']
         
     def filter_por_data(self, queryset, name, value):
+        value = value.replace("-", "")
+        value = value.replace("/", "")
+        value = value.replace("_", "")
+        value = value.replace(".", "")
+        value = value.replace(" ", "")
+        value = value.replace(":", "")
         if len(value) != 8:
             return queryset.none()
         
@@ -43,6 +49,12 @@ class Historicos_filter(django_filters.FilterSet):
     
     
     def filter_por_hora(self, queryset, name, value):
+        value = value.replace("-", "")
+        value = value.replace("/", "")
+        value = value.replace("_", "")
+        value = value.replace(".", "")
+        value = value.replace(" ", "")
+        value = value.replace(":", "")
         if len(value) != 6:
             return queryset.none()
         return queryset.extra(

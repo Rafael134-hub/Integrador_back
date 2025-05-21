@@ -116,6 +116,30 @@ export default function Historic(){
     }
 
 
+    const export_historic = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/exportar/historicos', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                responseType: 'blob'  
+            });
+    
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+    
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'historicos.xlsx'); 
+            document.body.appendChild(link);
+            link.click();
+    
+            link.remove();
+        } catch (error) {
+            console.error("Erro ao exportar histórico:", error);
+        }
+    };
+
+
     const update_historic = (historic)=>{
         setSelectedHistoric(historic)
         setModalOpen(true)
@@ -178,6 +202,12 @@ export default function Historic(){
 
                         </div>
                         
+                    </div>
+                    
+                    <div className="pl-[5.5rem] mb-[1rem]">
+                        <div className="p-2 text-center rounded-2xl bg-teal-900 text-white duration-200 cursor-pointer ease-in-out hover:scale-110 w-[10rem]" onClick={export_historic}>
+                            <h1>Exportar</h1>
+                        </div>
                     </div>
                     
                     <div className="mb-[12vh]">

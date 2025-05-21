@@ -10,11 +10,13 @@ from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from .filters import *
+from django.http import HttpResponse
+from datetime import datetime
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -118,9 +120,9 @@ class UploadXLSXViewAmbiente(APIView):
             return Response({'erro': 'Arquivo não enviado'}, status=400)
 
         wb = load_workbook(filename=file_obj)
-        ws = wb.active  # primeira aba
+        ws = wb.active  
         
-        for i, row in enumerate(ws.iter_rows(min_row=2, values_only=True)):  # pula o cabeçalho
+        for i, row in enumerate(ws.iter_rows(min_row=2, values_only=True)): 
             sig = str(row[0]).strip() if row[0] is not None else None
             descricao = str(row[1]).strip() if row[1] is not None else None
             ni = str(row[2]).strip() if row[2] is not None else None
@@ -138,7 +140,6 @@ class UploadXLSXViewAmbiente(APIView):
 
         return Response({'mensagem': 'Dados importados com sucesso!'})
     
-
 
 class UploadXLSXViewSensores(APIView):
     parser_classes = [MultiPartParser]
@@ -214,4 +215,111 @@ class UploadXLSXViewHistoricos(APIView):
 
         return Response({'mensagem': 'Dados importados com sucesso!'})
 
- 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def exportar_sensores_excel(request):
+    filterset = Sensores_filter(request.GET, queryset=Sensor.objects.all())
+    sensores = filterset.qs
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Sensores"
+
+    ws.append([
+        "ID", "Sensor", "MAC Address", "Unidade de Medida",
+        "Latitude", "Longitude", "Status"
+    ])
+
+    for s in sensores:
+        ws.append([
+            s.id,
+            s.sensor,
+            s.mac_adress,
+            s.unidade_med,
+            s.latitude,
+            s.longitude,
+            "Ativo" if s.status else "Inativo"
+        ])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=sensores.xlsx'
+    wb.save(response)
+    return response
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def exportar_ambientes_excel(request):
+    filterset = Ambientes_filter(request.GET, queryset = Ambiente.objects.all())
+    ambientes = filterset.qs
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Ambientes"
+
+    ws.append([
+        "ID", "SIG", "Descrição", "NI",
+        "Responsável"
+    ])
+
+    for a in ambientes:
+        ws.append([
+            a.id,
+            a.sig,
+            a.descricao,
+            a.ni,
+            a.responsavel
+        ])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=ambientes.xlsx'
+    wb.save(response)
+    return response
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def exportar_historicos_excel(request):
+    filterset = Historicos_filter(request.GET, queryset=Historico.objects.all())
+    historicos = filterset.qs
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Históricos"
+
+    ws.append([
+        "ID", "Sensor", "Ambiente", "Valor",
+        "Timestamp"
+    ])
+
+    for h in historicos:
+        try:
+            timestamp_str = str(h.timestamp)
+            
+            if len(timestamp_str) < 14:
+                timestamp_str = timestamp_str.zfill(14)
+            
+            timestamp_formatado = timestamp_str[0:2] + "/" + timestamp_str[2:4] + "/" + timestamp_str[4:8] + " " + timestamp_str[8:10] + ":" + timestamp_str[10:12] + ":" + timestamp_str[12:14] 
+            
+        except Exception as e:
+            timestamp_formatado = "Erro no timestamp"
+
+        ws.append([
+            h.id,
+            h.id_sensor.sensor if h.id_sensor else "",
+            h.id_ambiente.descricao if h.id_ambiente else "",
+            h.valor,
+            timestamp_formatado
+        ])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=historicos.xlsx'
+    wb.save(response)
+    return response
