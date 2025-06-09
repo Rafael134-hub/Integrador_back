@@ -23,5 +23,6 @@ urlpatterns = [
     path('upload-xlsx-historicos/',  UploadXLSXViewHistoricos.as_view()),
     path('exportar/historicos/',  exportar_historicos_excel, name='exportar_historicos'),
     path('exportar/sensores/',  exportar_sensores_excel, name='exportar_sensores'),
-    path('exportar/ambientes/',  exportar_ambientes_excel, name='exportar ambientes')
+    path('exportar/ambientes/',  exportar_ambientes_excel, name='exportar ambientes'),
+    path('signup/', SignUpView.as_view()),
 ]

@@ -25,6 +25,11 @@ class Historicos_filter(django_filters.FilterSet):
     id_sensor = django_filters.NumberFilter(field_name='id_sensor', lookup_expr='exact')
     data = django_filters.CharFilter(method='filter_por_data') 
     hora = django_filters.CharFilter(method='filter_por_hora')
+    sig = django_filters.NumberFilter(field_name='id_ambiente__sig', lookup_expr='exact')
+    descricao = django_filters.CharFilter(field_name='id_ambiente__descricao', lookup_expr='icontains')
+    mac_adress = django_filters.CharFilter(field_name='id_sensor__mac_adress', lookup_expr='icontains')
+    sensor = django_filters.CharFilter(field_name='id_sensor__sensor', lookup_expr='icontains')
+    status = django_filters.BooleanFilter(field_name='id_sensor__status')
 
     class Meta:
         model = Historico
@@ -61,5 +66,3 @@ class Historicos_filter(django_filters.FilterSet):
             where=["SUBSTR(CAST(timestamp AS TEXT), 9, 6) = %s"],
             params=[value]
         )
-        
-        
