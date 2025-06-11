@@ -2,15 +2,19 @@ import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import Header from "../../components/header/header";
 import Footer from "../../components/footer/footer";
+import Sidebar from "../../components/sidebar/aside";
 
 export default function Home(){
     return(
-        <>
+        <div className="bg-black">
+            <Sidebar/>
+
             <Header/>
 
-            <main>
+            <main className="ml-[6.5rem]">
+                
                 <section>
-                    <h1 className="text-center mt-[8vh] text-[40px] font-bold text-sky-600">Welcome to our plataform!</h1>
+                    <h1 className="text-center mt-[8vh] text-[40px] font-bold text-white">Welcome to our plataform!</h1>
                     <h2 className="text-center mt-[2vh] text-2xl">What would you like to do?</h2>
 
                     <div className="flex justify-center items-center mb-[25vh]">
@@ -46,7 +50,7 @@ export default function Home(){
            
 
             <Footer />
-        </>
+        </div>
     )
 
 }

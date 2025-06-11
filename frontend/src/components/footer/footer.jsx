@@ -11,8 +11,8 @@ export default function Footer(){
     }
 
     return(
-        <footer className="bg-emerald-700 p-[2rem] text-white flex items-center justify-center border-t-white">
-            <p className="text-xl">© 2025 - All rights reserved</p>
+        <footer className="ml-[6.5rem] bg-[#298287] text-white flex items-center justify-center border-t-white">
+            <p className="text-xl p-[2rem]">© 2025 - Orbisense All rights reserved</p>
         </footer>
         
     )
