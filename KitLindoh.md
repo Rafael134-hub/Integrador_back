@@ -17,14 +17,14 @@
 
 
 
-<h2>Import</2>
+<h2>Import</h2>
 <p>http://127.0.0.1:8000/api/upload-xlsx-ambientes/   But put file at the name field</p> 
 <p>http://127.0.0.1:8000/api/upload-xlsx-sensores/   But put file at the name field</p> 
 <p>http://127.0.0.1:8000/api/upload-xlsx-historicos/   But put file at the name field</p> 
 
 
 
-<h2>Sensors>/h2>
+<h2>Sensors</h2>
 <p>http://127.0.0.1:8000/api/sensores/</p>
 <p>http://127.0.0.1:8000/api/sensor/1/</p>
 
