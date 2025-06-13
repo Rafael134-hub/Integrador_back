@@ -50,7 +50,7 @@
 
 
 
-<h2>Ambients>/h2>
+<h2>Ambients</h2>
 <p>http://127.0.0.1:8000/api/ambientes/</p>
 <p>http://127.0.0.1:8000/api/ambiente/1/</p>
 
