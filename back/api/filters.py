@@ -19,50 +19,19 @@ class Ambientes_filter(django_filters.FilterSet):
         model = Ambiente
         fields = '__all__'
         
-
+        
 class Historicos_filter(django_filters.FilterSet):
     id_ambiente = django_filters.NumberFilter(field_name='id_ambiente', lookup_expr='exact')
     id_sensor = django_filters.NumberFilter(field_name='id_sensor', lookup_expr='exact')
-    data = django_filters.CharFilter(method='filter_por_data') 
-    hora = django_filters.CharFilter(method='filter_por_hora')
+    timestamp = django_filters.DateTimeFilter(field_name='timestamp', lookup_expr='exact')
+    timestamp_range = django_filters.DateTimeFromToRangeFilter(field_name='timestamp')
     sig = django_filters.NumberFilter(field_name='id_ambiente__sig', lookup_expr='exact')
     descricao = django_filters.CharFilter(field_name='id_ambiente__descricao', lookup_expr='icontains')
     mac_adress = django_filters.CharFilter(field_name='id_sensor__mac_adress', lookup_expr='icontains')
     sensor = django_filters.CharFilter(field_name='id_sensor__sensor', lookup_expr='icontains')
     status = django_filters.BooleanFilter(field_name='id_sensor__status')
+    valor = django_filters.NumberFilter(field_name='valor', lookup_expr='exact')
 
     class Meta:
         model = Historico
-        fields = ['id_ambiente', 'id_sensor', 'data', 'hora']
-        
-    def filter_por_data(self, queryset, name, value):
-        value = value.replace("-", "")
-        value = value.replace("/", "")
-        value = value.replace("_", "")
-        value = value.replace(".", "")
-        value = value.replace(" ", "")
-        value = value.replace(":", "")
-        if len(value) != 8:
-            return queryset.none()
-        
-        value_int = int(value) 
-
-        return queryset.extra(
-            where=["CAST(timestamp AS TEXT) LIKE %s"],
-            params=[str(value_int) + '%']
-        )
-    
-    
-    def filter_por_hora(self, queryset, name, value):
-        value = value.replace("-", "")
-        value = value.replace("/", "")
-        value = value.replace("_", "")
-        value = value.replace(".", "")
-        value = value.replace(" ", "")
-        value = value.replace(":", "")
-        if len(value) != 6:
-            return queryset.none()
-        return queryset.extra(
-            where=["SUBSTR(CAST(timestamp AS TEXT), 9, 6) = %s"],
-            params=[value]
-        )
+        fields = ['id_ambiente', 'id_sensor', 'timestamp']

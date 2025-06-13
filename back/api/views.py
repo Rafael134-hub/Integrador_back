@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.parsers import MultiPartParser
@@ -104,11 +104,10 @@ class HistoricosDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = Historico_serializer
     permission_classes = [IsAuthenticated]
 
-
 class SignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
+    permission_classes = [AllowAny]
 
 class UploadXLSXViewAmbiente(APIView):
     parser_classes = [MultiPartParser]
@@ -186,13 +185,14 @@ class UploadXLSXViewHistoricos(APIView):
             return Response({'erro': 'Arquivo não enviado'}, status=400)
 
         wb = load_workbook(filename=file_obj)
-        ws = wb.active  # primeira aba
+        ws = wb.active  
             
-        for i, row in enumerate(ws.iter_rows(min_row=2, values_only=True)):  # pula o cabeçalho
+        for i, row in enumerate(ws.iter_rows(min_row=2, values_only=True)):  
             id_ambiente = str(row[0]).strip() if row[0] is not None else None
             id_sensor = str(row[1]).strip() if row[1] is not None else None
-            timestamp = str(row[2]).strip() if row[2] is not None else None
-            valor = str(row[3]).strip() if row[3] is not None else None
+            valor = str(row[2]).strip() if row[2] is not None else None
+            timestamp = str(row[3]).strip() if row[3] is not None else None
+            
                 
             if not valor:
                     print(f"[Linha {i+2}] Erro: sensor vazio. Dados: {row}")
@@ -200,8 +200,8 @@ class UploadXLSXViewHistoricos(APIView):
             try:
                 id_ambiente = get_object_or_404(Ambiente, id=int(row[0]))
                 id_sensor = get_object_or_404(Sensor, id=int(row[1]))
-                timestamp = int(row[2])  # ou convertê-lo para datetime, se for o caso
-                valor = float(row[3])
+                valor = float(row[2])
+                timestamp = row[3]
 
                 Historico.objects.create(
                     id_ambiente=id_ambiente,

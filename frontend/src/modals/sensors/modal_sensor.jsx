@@ -66,7 +66,7 @@ const ModalSensors = ({
                 status: status,
             });
 
-            await axios.put(`http://127.0.0.1:8000/api/sensor/${selectedSensor.id}`,
+            await axios.put(`http://127.0.0.1:8000/api/sensor/${selectedSensor.id}/`,
                 {
                     sensor: sensor,
                     mac_adress: mac_adress,

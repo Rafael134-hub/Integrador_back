@@ -17,7 +17,6 @@ urlpatterns = [
     path('historico/<int:pk>/', HistoricosDetailView.as_view()),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('signup/', SignUpView.as_view(), name='signup'),
     path('upload-xlsx-ambientes/',  UploadXLSXViewAmbiente.as_view()),
     path('upload-xlsx-sensores/',  UploadXLSXViewSensores.as_view()),
     path('upload-xlsx-historicos/',  UploadXLSXViewHistoricos.as_view()),

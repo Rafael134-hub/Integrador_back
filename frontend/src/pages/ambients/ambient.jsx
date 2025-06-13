@@ -45,7 +45,7 @@ export default function Ambients(){
     const delete_ambient = async (id) => {
         if (window.confirm("Are u sure?")) {
             try {
-                await axios.delete(`http://127.0.0.1:8000/api/ambiente/${id}`,
+                await axios.delete(`http://127.0.0.1:8000/api/ambiente/${id}/`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`

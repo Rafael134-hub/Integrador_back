@@ -27,7 +27,7 @@ const ModalAmbients = ({
     const newAmbient = async () => {
 
         try {
-            await axios.post('http://127.0.0.1:8000/api/ambientes',
+            await axios.post('http://127.0.0.1:8000/api/ambientes/',
 
                 {
                     sig: parseInt(sig),
@@ -60,7 +60,7 @@ const ModalAmbients = ({
                 responsavel: responsavel
             });
 
-            await axios.put(`http://127.0.0.1:8000/api/ambiente/${selectedAmbient.id}`,
+            await axios.put(`http://127.0.0.1:8000/api/ambiente/${selectedAmbient.id}/`,
                 {
                     sig: sig,
                     descricao: descricao,
