@@ -1,7 +1,14 @@
 from django.db import models
 
 class Sensor(models.Model):
-    sensor = models.CharField(max_length=255)
+    TIPOS_SENSORES = [
+        ("contador", "contador"),
+        ("umidade", "umidade"),
+        ("temperatura", "temperatura"),
+        ("luminosidade", "luminosidade")
+    ]
+
+    sensor = models.CharField(max_length=255, choices=TIPOS_SENSORES)
     mac_adress = models.CharField(max_length=255)
     unidade_med = models.CharField(max_length=255)
     latitude = models.FloatField()
