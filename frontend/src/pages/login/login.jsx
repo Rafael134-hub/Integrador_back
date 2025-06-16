@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-export default function Login() {
+export function Login() {
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -25,6 +25,7 @@ export default function Login() {
 
             console.log("Token Login: ", response.data.access);
             localStorage.setItem('token', response.data.access);
+            localStorage.setItem('username', user)
             console.log("Token: ", localStorage.getItem("token"));
             navigate('/home');
 

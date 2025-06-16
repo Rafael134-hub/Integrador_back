@@ -1,11 +1,12 @@
 import { useState } from "react";
-import Header from "../../../components/header/header";
-import Footer from "../../../components/footer/footer";
+import { Header } from "../../../components/header/header";
+import { Footer } from "../../../components/footer/footer";
 import axios from "axios";
 
 export function Upload_sensors() {
     const [file, setFile] = useState(null);
     const [mensagem, setMensagem] = useState('');
+
 
     const handleUpload = async () => {
         const formData = new FormData();
@@ -24,38 +25,35 @@ export function Upload_sensors() {
     };
 
     return (
-        <>
-            <Header />
 
-            <main>
+        <main>
 
-                <section>
-                    <div className="h-screen bg-gradient-to-bl from-sky-900 via-teal-400 to-green-400">
-                        <div className="h-[100vh] flex items-center justify-center">
-                            <form className="bg-white w-[24vw] h-[54vh] flex flex-col items-center justify-center rounded-4xl text-black mb-[15vh]">
-                                <h1 className="mb-6 text-4xl text-sky-500 font-bold">Importar sensores</h1>
-                                <input
-                                    type="file"
-                                    className="w-[18vw] h-[4vh] p-[1rem] rounded-xl mt-[4vh] bg-blue-100 focus:outline-0 shadow-none"
-                                    onChange={(e) => setFile(e.target.files[0])}
-                                />
-                                <p>{mensagem}</p>
-                                <button
-                                    className="mt-[8vh] bg-teal-500 rounded-2xl w-[12vw] h-[4vh] text-white font-bold cursor-pointer hover:scale-110 transition-all ease-in duration-75"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handleUpload();
-                                    }}
-                                >
-                                    Send
-                                </button>
-                            </form>
-                        </div>
+            <section>
+                <div className="h-screen bg-gradient-to-bl from-sky-900 via-teal-400 to-green-400">
+                    <div className="h-[100vh] flex items-center justify-center">
+                        <form className="bg-white w-[24vw] h-[54vh] flex flex-col items-center justify-center rounded-4xl text-black mb-[15vh]">
+                            <h1 className="mb-6 text-4xl text-sky-500 font-bold">Importar sensores</h1>
+                            <input
+                                type="file"
+                                className="w-[18vw] h-[4vh] p-[1rem] rounded-xl mt-[4vh] bg-blue-100 focus:outline-0 shadow-none"
+                                onChange={(e) => setFile(e.target.files[0])}
+                            />
+                            <p>{mensagem}</p>
+                            <button
+                                className="mt-[8vh] bg-teal-500 rounded-2xl w-[12vw] h-[4vh] text-white font-bold cursor-pointer hover:scale-110 transition-all ease-in duration-75"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleUpload();
+                                }}
+                            >
+                                Send
+                            </button>
+                        </form>
                     </div>
-                </section>
-            </main>
+                </div>
+            </section>
+        </main>
 
-            <Footer />
-        </>
+
     );
 }

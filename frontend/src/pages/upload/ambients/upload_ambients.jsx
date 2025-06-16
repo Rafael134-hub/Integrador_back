@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Header from "../../../components/header/header";
-import Footer from "../../../components/footer/footer";
+import { Header } from "../../../components/header/header";
+import { Footer } from "../../../components/footer/footer";
 import axios from "axios";
 
 export function Upload_ambients() {

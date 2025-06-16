@@ -1,138 +1,160 @@
 import React, { useState } from "react";
-import { IoSend } from "react-icons/io5";
-import { RiArrowDropDownLine, RiArrowDropUpLine, RiResetLeftFill } from "react-icons/ri";
+import { IoIosCloseCircle } from "react-icons/io";
+import { RiResetLeftLine } from "react-icons/ri";
+import { FaFilter } from "react-icons/fa";
 import axios from "axios";
 
-const FilterSensors = ({
-    isFilterOpen,
-    onFilterClose,
-    originalDataFilter,
-    dadosFilter,
-    setDadosFilter,
-    token,
-}) => {
-    if (!isFilterOpen) return null;
+export function FilterSensores({
+    macAdress,
+    setMacAdress,
+    status,
+    setStatus,
+    sensor,
+    setSensor,
+}) {
 
-    const [isMacAdressOpen, setIsMacAdressOpen] = useState(false);
-    const [isStatusOpen, setIsStatusOpen] = useState(false);
-    const [isSensorOpen, setIsSensorOpen] = useState(false);
-    const [status, setStatus] = useState("");
-    const [sensor, setSensor] = useState("");
-    const [macAdress, setMacAdress] = useState("");
+    const [openButton, setOpenButton] = useState(false);
+    const [openFilter, setOpenFilter] = useState(false);
 
-    function filterData() {
-        try {
-            const response = axios.get(`http://127.0.0.1:8000/api/sensores/?mac_adress=${macAdress}&status=${status}&sensor=${sensor}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            )
-            setDadosFilter(response.data);
-            console.log("Datah: ", data);
-            
-        } catch (error) {
-            console.log(error)
-        } 
-    }
+    const cleanFilter = () => {
+        setMacAdress("");
+        setStatus("");
+        setSensor("");
+    };
 
-    
     return (
-        <div className="flex justify-center items-center mt-[1vh]">
-            <div className="flex justify-center items-center">
-                <div className="w-[22vw] bg-teal-700 rounded-3xl p-6">
-                    <h3 className="text-white text-xl">Filter per:</h3>
-                    
-                    <div className="bg-teal-600 mb-[4vh] mt-[1.5rem] p-[0.5rem] rounded-xl">
 
-                        <div className="flex items-center justify-between">
-                            <p className="text-white text-l">Sensors MAC Adress</p>
-                            {isMacAdressOpen == true ? (
-                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsMacAdressOpen(false)}></RiArrowDropUpLine>
-                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsMacAdressOpen(true)}></RiArrowDropDownLine>}
+        <>
+            <button
+                className="h-[4rem] w-fit pl-[1rem] pr-[1rem] rounded-xl bg-[#99FFE1] cursor-pointer transition-all duration-300 ease-in-out "
+                // Ativa o evento de exportação        
+                // Define os estados para abir ou fechar o botão
+                onClick={openFilter ? () => setOpenFilter(false) : () => setOpenFilter(true)}
+                onMouseEnter={() => setOpenButton(true)}
+                onFocus={() => setOpenButton(true)}
+                onMouseLeave={() => setOpenButton(false)}
+                onBlur={() => setOpenButton(false)}>
 
-                        </div>
-                        <div>
-                            {isMacAdressOpen == true ? (
-                                <div className="flex items-center justify-between mt-4 pb-1">
-                                    <input placeholder="Type the ambient SLG" value={macAdress} onChange={(e) => setMacAdress(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
-                                    <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
+                <div className=' flex items-center justify-center'>
+                    <FaFilter
+                        className="text-4xl"
+                    />
 
-                                </div>
-                            ) : null}
-                        </div>
-                    </div>
-                        
+                    {/* Área do texo do botão, que só é mostrada no hover ou onFocus, e que possui uma transição suave */}
+                    <span className={`font-bold transition-all duration-200 ease-in-out overflow-hidden ${openButton ? "opacity-100 max-w-[100%] ml-[1rem]" : "opacity-0 max-w-0 ml-0"}`}>
+                        Filtrar Sensores
+                    </span>
 
-                    <div className="bg-teal-600 mb-[4vh] mt-[1.5rem] p-[0.5rem] rounded-xl">
-
-                        <div className="flex items-center justify-between">
-                            <p className="text-white text-l">Sensors type</p>
-                            {isSensorOpen == true ? (
-                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsSensorOpen(false)}></RiArrowDropUpLine>
-                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsSensorOpen(true)}></RiArrowDropDownLine>}
-
-                        </div>
-                        <div>
-                            {isSensorOpen == true ? (
-                                <div className="flex items-center justify-between mt-4 pb-1">
-                                    <input placeholder="Type the ambient description" value={sensor} onChange={(e) => setSensor(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
-                                    <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
-
-                                </div>
-                            ) : null}
-                        </div>
-                    </div>
-
-                    <div className="bg-teal-600 mb-[4vh] mt-[1.5rem] p-[0.5rem] rounded-xl">
-
-                        <div className="flex items-center justify-between">
-                            <p className="text-white text-l">Sensors status</p>
-                            {isStatusOpen == true ? (
-                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsStatusOpen(false)}></RiArrowDropUpLine>
-                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsStatusOpen(true)}></RiArrowDropDownLine>}
-
-                        </div>
-                        <div>
-                            {isStatusOpen == true ? (
-                                <div className="flex items-center justify-between mt-4 pb-1">
-                                    <input placeholder="Type the ambient description" value={status} onChange={(e) => setStatus(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
-                                    <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
-
-                                </div>
-                            ) : null}
-                        </div>
-                    </div>
-
-                    <div className="flex items-center justify-between pl-1 mt-[1.5rem]">
-
-                        <div className="flex items-center p-2 rounded-xl duration-150 ease-in-out hover:bg-teal-600 hover:scale-115 hover:ml-2" onClick={() => {
-                            setDadosFilter(originalDataFilter);
-                            setStatus("");
-                            setMacAdress("");
-                            setSensor("");
-                        }}>
-                            <RiResetLeftFill className="text-white text-2xl mr-2"></RiResetLeftFill>
-                            <p className="text-[16px] text-white">Remove all filters</p>
-                        </div>
-
-                        <p className="text-white text-3xl cursor-pointer duration-100 easy-in-out hover:scale-125 pr-1" onClick={
-                            () => {
-                                onFilterClose();
-                                setStatus("");
-                            setMacAdress("");
-                            setSensor("");
-                            }}>x</p>
-
-                    </div>
-                    
                 </div>
-                
-            </div>
-        </div>
-        
+
+            </button>
+
+            {
+                openFilter ?
+
+                    <form
+                        className="bg-[#298287] w-fit absolute mt-[35.5rem] ml-[1rem] p-[1.5rem] pr-[2rem] pl-[2rem] rounded-2xl">
+                        <fieldset 
+                        className="flex flex-col text-left text-white">
+                            <legend
+                            className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Sensores</legend>
+
+                            <label htmlFor="macAdress">
+                                Informe o Mac Address
+                            </label>
+                            <input
+                                name="macAdress"
+                                type="text"
+                                value={macAdress}
+                                onChange={(e) => setMacAdress(e.target.value)}
+                                placeholder="MAC Address"
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]">
+                            </input>
+
+                             <label htmlFor="status"
+                             className="mt-[2rem]">
+                                Informe o Status
+                            </label>
+
+                            <select
+                            name="status"
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                            className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+                                <option
+                                className="bg-[#298287] text-white"
+                                value={true}>
+                                    Ativo
+                                </option>
+
+                                <option
+                                className="bg-[#298287] text-white"
+                                value={false}>
+                                    Inativo
+                                </option>
+                            </select>
+
+
+                            <label htmlFor="sensor"
+                             className="mt-[2rem]">
+                                Informe o Tipo de sensor
+                            </label>
+
+                            <select
+                            name="sensor"
+                            value={sensor}
+                            onChange={(e) => setSensor(e.target.value)}
+                            className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+                                <option
+                                className="bg-[#298287] text-white"
+                                value={"temperatura"}>
+                                    Temperatura
+                                </option>
+
+                                <option
+                                className="bg-[#298287] text-white"
+                                value={"umidade"}>
+                                    Umidade
+                                </option>
+
+                                <option
+                                className="bg-[#298287] text-white"
+                                value={"luminosidade"}>
+                                    Luminosidade
+                                </option>
+
+                                <option
+                                className="bg-[#298287] text-white"
+                                value={"contador"}>
+                                    Contador
+                                </option>
+                            </select>
+
+                        </fieldset>
+
+                        <div className="flex items-center justify-between mt-[2.5rem]">
+                            <button>
+                                <RiResetLeftLine
+                                    className="text-4xl cursor-pointer"
+                                    onClick={cleanFilter}/>
+                            </button>
+
+                            <button>
+                                <IoIosCloseCircle
+                                    className="text-4xl cursor-pointer"
+                                    onClick={() => setOpenFilter(false)}/>
+                            </button>
+                        </div>
+                        
+                    </form>
+
+                    :
+
+                    <form>
+                    </form>
+            }
+
+        </>
+
     )
 }
-
-export default FilterSensors

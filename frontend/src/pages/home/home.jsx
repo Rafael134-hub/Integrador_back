@@ -1,56 +1,75 @@
-import React, {useState} from "react";
-import { Link } from "react-router-dom";
-import Header from "../../components/header/header";
-import Footer from "../../components/footer/footer";
-import Sidebar from "../../components/sidebar/aside";
+import { MdHistory, MdPlace, MdOutlineSensors } from "react-icons/md";
+import { BiSolidMapAlt } from "react-icons/bi";
+import { CardHome } from "../../components/cardHome/cardHome";
 
-export default function Home(){
-    return(
-        <div className="bg-black">
-            <Sidebar/>
+// Classe dos elementos de card
+class Card {
+    constructor(descricao, link, icone) {
+        this.descricao = descricao;
+        this.link = link;
+        this.icone = icone;
+    }
+}
 
-            <Header/>
+export function Home() {
 
-            <main className="ml-[6.5rem]">
-                
-                <section>
-                    <h1 className="text-center mt-[8vh] text-[40px] font-bold text-white">Welcome to our plataform!</h1>
-                    <h2 className="text-center mt-[2vh] text-2xl">What would you like to do?</h2>
+    // Pega o nome do usuário do localStorage
+    const username = localStorage.getItem("username");
 
-                    <div className="flex justify-center items-center mb-[25vh]">
-                        <div className="mt-[8vh] w-[60vw] flex justify-between items-cenater text-white">
-                            
-                            <Link to={"/sensores"}>
-                                <div className="bg-teal-700 h-[30vh] w-[15vw] flex items-center justify-center text-center rounded-3xl duration-200 ease-in-out hover:scale-110">
-                                    <h3 className="font-bold text-xl">Manage Sensores</h3>
-                                </div>
-                            </Link>
+    // Lista dos elementos de cada card de funcionalidade
+    const elementosCard = [
+        new Card("Monitorar sensores!", "/sensores", <MdOutlineSensors className="w-[5rem] h-[5rem]" />),
+        new Card("Monitorar ambientes!", "/ambientes", <MdPlace className="w-[5rem] h-[5rem]" />),
+        new Card("Visualizar o histórico!", "/historicos", <MdHistory className="w-[5rem] h-[5rem]" />),
+        new Card("Visualizar o mapa!", "/mapa", <BiSolidMapAlt className="w-[5rem] h-[5rem]" />)
+    ];
 
+    return (
 
-                            <Link to={"/ambientes"}>
-                                <div className="bg-teal-600 h-[30vh] w-[15vw] flex items-center justify-center text-center rounded-3xl duration-200 ease-in-out hover:scale-110">
-                                    <h3 className="font-bold text-xl">Manage Ambients</h3>
-                                </div>
-                            </Link>
+        <main>
 
+            {/* Seção do título da página */}
+            <section
+                aria-label="Área do título da página">
 
-                            <Link to={"/historics"}>
-                                <div className="bg-sky-600 h-[30vh] w-[15vw] flex items-center justify-center text-center rounded-3xl duration-200 ease-in-out hover:scale-110">
-                                    <h3 className="font-bold text-xl">Manage Historics</h3>
-                                </div>
-                            </Link>
+                <div className=" flex items-center justify-center">
+                    <div className="flex flex-col items-center mt-[4rem] w-fit">
 
-                        </div>
+                        <h1 className="text-[40px] font-bold text-white">
+                            Olá <span className="text-[#99FFE1]">{`${username || "Usuário"}!`}</span> o que você gostaria de fazer?
+                        </h1>
+
+                        {/* Elemento decorativo que fica embaixo do título */}
+                        <div className="bg-[#99FFE1] h-[0.3rem] w-[3rem] rounded-2xl mr-4 self-start relative right-[0.5rem]" />
                     </div>
-                    
-                </section>
+                </div>
 
+            </section>
 
-            </main>
-           
+            {/* Área dos cards da Home */}
+            <section
+                aria-label="Área dos cards de opção da página"
+                className="flex items-center justify-center w-full mt-[4rem]">
 
-            <Footer />
-        </div>
+                {/* Grid para alinhar a disposição dos elementos */}
+                <div
+                    className="grid grid-cols-2 w-[70%] gap-[4rem] place-items-center mb-[8rem]">
+                    {
+                        elementosCard.map((card, index) => (
+                            <CardHome
+                                key={index}
+                                cardIcon={card.icone}
+                                cardLink={card.link}
+                                cardText={card.descricao}
+                            />
+                        ))}
+
+                </div>
+
+            </section>
+
+        </main>
+
     )
 
 }
