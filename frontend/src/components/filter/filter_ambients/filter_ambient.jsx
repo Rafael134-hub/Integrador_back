@@ -1,112 +1,112 @@
 import React, { useState } from "react";
-import { IoSend } from "react-icons/io5";
-import { RiArrowDropDownLine, RiArrowDropUpLine, RiResetLeftFill } from "react-icons/ri";
+import { IoIosCloseCircle } from "react-icons/io";
+import { RiResetLeftLine } from "react-icons/ri";
+import { FaFilter } from "react-icons/fa";
+import axios from "axios";
 
-const FilterAmbients = ({
-    isFilterOpen,
-    onFilterClose,
-    originalDataFilter,
-    setDadosFilter,
-}) => {
-    if (!isFilterOpen) return null;
+export function FilterAmbientes({
+    sig,
+    setSig,
+    descricao,
+    setDescricao
+}) {
 
-    const [isNameOpen, setIsNameOpen] = useState(false);
-    const [isIDOpen, setIsIDOpen] = useState(false);
-    const [sigContent, setSigContent] = useState();
-    const [nameContent, setNameContent] = useState("");
+    const [openButton, setOpenButton] = useState(false);
+    const [openFilter, setOpenFilter] = useState(false);
 
-    function filterData() {
-        let filteredData = originalDataFilter;
-    
-        if (sigContent.trim() !== "" && sigContent != NaN) {
-            filteredData = filteredData.filter((item) =>
-                item.sig === parseInt(sigContent.trim())
-            );
-        }
-    
-        if (nameContent.trim() !== "") {
-            filteredData = filteredData.filter((item) =>
-                item.descricao.toLowerCase().includes(nameContent.toLowerCase().trim())
-            );
-        }
-    
-        setDadosFilter(filteredData);
-    }
+    const cleanFilter = () => {
+        setSig("");
+        setDescricao("");
+    };
 
-    
     return (
-        <div className="flex justify-center items-center mt-[1vh]">
-            <div className="flex justify-center items-center">
-                <div className="w-[22vw] bg-teal-700 rounded-3xl p-6">
-                    <h3 className="text-white text-xl">Filter per:</h3>
-                    
-                    <div className="bg-teal-600 mb-[4vh] mt-[1.5rem] p-[0.5rem] rounded-xl">
 
-                        <div className="flex items-center justify-between">
-                            <p className="text-white text-l">Ambient SIG</p>
-                            {isIDOpen == true ? (
-                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsIDOpen(false)}></RiArrowDropUpLine>
-                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsIDOpen(true)}></RiArrowDropDownLine>}
+        <>
+            <button
+                className="h-[4rem] w-fit pl-[1rem] pr-[1rem] rounded-xl bg-[#99FFE1] cursor-pointer transition-all duration-300 ease-in-out "
+                // Ativa o evento de exportação        
+                // Define os estados para abir ou fechar o botão
+                onClick={openFilter ? () => setOpenFilter(false) : () => setOpenFilter(true)}
+                onMouseEnter={() => setOpenButton(true)}
+                onFocus={() => setOpenButton(true)}
+                onMouseLeave={() => setOpenButton(false)}
+                onBlur={() => setOpenButton(false)}>
 
-                        </div>
-                        <div>
-                            {isIDOpen == true ? (
-                                <div className="flex items-center justify-between mt-4 pb-1">
-                                    <input placeholder="Type the ambient SLG" value={sigContent} onChange={(e) => setSigContent(e.target.value)} type="number" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
-                                    <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
+                <div className=' flex items-center justify-center'>
+                    <FaFilter
+                        className="text-4xl"
+                    />
 
-                                </div>
-                            ) : null}
-                        </div>
-                    </div>
-                        
+                    {/* Área do texo do botão, que só é mostrada no hover ou onFocus, e que possui uma transição suave */}
+                    <span className={`font-bold transition-all duration-200 ease-in-out overflow-hidden ${openButton ? "opacity-100 max-w-[100%] ml-[1rem]" : "opacity-0 max-w-0 ml-0"}`}>
+                        Filtrar Sensores
+                    </span>
 
-                    <div className="bg-teal-600 mb-[4vh] mt-[1.5rem] p-[0.5rem] rounded-xl">
-
-                        <div className="flex items-center justify-between">
-                            <p className="text-white text-l">Ambient Description</p>
-                            {isNameOpen == true ? (
-                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsNameOpen(false)}></RiArrowDropUpLine>
-                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsNameOpen(true)}></RiArrowDropDownLine>}
-
-                        </div>
-                        <div>
-                            {isNameOpen == true ? (
-                                <div className="flex items-center justify-between mt-4 pb-1">
-                                    <input placeholder="Type the ambient description" value={nameContent} onChange={(e) => setNameContent(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
-                                    <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
-
-                                </div>
-                            ) : null}
-                        </div>
-                    </div>
-
-                    <div className="flex items-center justify-between pl-1 mt-[1.5rem]">
-
-                        <div className="flex items-center p-2 rounded-xl duration-150 ease-in-out hover:bg-teal-600 hover:scale-115 hover:ml-2" onClick={() => {
-                            setDadosFilter(originalDataFilter);
-                            setNameContent("");
-                            setSigContent("");
-                        }}>
-                            <RiResetLeftFill className="text-white text-2xl mr-2"></RiResetLeftFill>
-                            <p className="text-[16px] text-white">Remove all filters</p>
-                        </div>
-
-                        <p className="text-white text-3xl cursor-pointer duration-100 easy-in-out hover:scale-125 pr-1" onClick={
-                            () => {
-                                onFilterClose();
-                                setNameContent("");
-                                setSigContent();
-                            }}>x</p>
-
-                    </div>
-                    
                 </div>
-                
-            </div>
-        </div>
-        
+
+            </button>
+
+            {
+                openFilter ?
+
+                    <form
+                        className="bg-[#298287] w-fit absolute mt-[28.5rem] ml-[1rem] p-[1.5rem] pr-[2rem] pl-[2rem] rounded-2xl">
+                        <fieldset 
+                        className="flex flex-col text-left text-white">
+                            <legend
+                            className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Sensores</legend>
+
+                            <label htmlFor="sig">
+                                Informe o SIG do ambiente
+                            </label>
+                            <input
+                                name="sig"
+                                type="text"
+                                value={sig}
+                                onChange={(e) => setSig(e.target.value)}
+                                placeholder="SIG"
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]">
+                            </input>
+
+                            <label htmlFor="descricao"
+                            className="mt-[1rem]">
+                                Informe a descrição do ambiente
+                            </label>
+                            <input
+                                name="descricao"
+                                type="text"
+                                value={descricao}
+                                onChange={(e) => setDescricao(e.target.value)}
+                                placeholder="Descrição"
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]">
+                            </input>
+                         
+
+                        </fieldset>
+
+                        <div className="flex items-center justify-between mt-[2.5rem]">
+                            <button>
+                                <RiResetLeftLine
+                                    className="text-4xl cursor-pointer"
+                                    onClick={cleanFilter}/>
+                            </button>
+
+                            <button>
+                                <IoIosCloseCircle
+                                    className="text-4xl cursor-pointer"
+                                    onClick={() => setOpenFilter(false)}/>
+                            </button>
+                        </div>
+                        
+                    </form>
+
+                    :
+
+                    <form>
+                    </form>
+            }
+
+        </>
+
     )
 }
-
-export default FilterAmbients

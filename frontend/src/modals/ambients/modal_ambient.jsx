@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { IoIosCloseCircle } from "react-icons/io";
 
-const ModalAmbients = ({
+export function ModalAmbientes({
     isOpen,
     onClose,
-    selectedAmbient,
+    selectedAmbiente,
     arrow,
     setArrow
-}) => {
+}) {
     if (!isOpen) return null
 
-    const [id, setId] = useState(selectedAmbient?.id ?? '');
-    const [sig, setSig] = useState(selectedAmbient?.sig ?? '');
-    const [ni, setNi] = useState(selectedAmbient?.ni ?? '');
-    const [descricao, setDescricao] = useState(selectedAmbient?.descricao ?? '');
-    const [responsavel, setResponsavel] = useState(selectedAmbient?.responsavel ?? '');
+    const [id, setId] = useState(selectedAmbiente?.id ?? '');
+    const [sig, setSig] = useState(selectedAmbiente?.sig ?? '');
+    const [ni, setNi] = useState(selectedAmbiente?.ni ?? '');
+    const [descricao, setDescricao] = useState(selectedAmbiente?.descricao ?? '');
+    const [responsavel, setResponsavel] = useState(selectedAmbiente?.responsavel ?? '');
 
     const token = localStorage.getItem('token')
 
@@ -24,7 +25,7 @@ const ModalAmbients = ({
     }
 
 
-    const newAmbient = async () => {
+    const newAmbiente = async () => {
 
         try {
             await axios.post('http://127.0.0.1:8000/api/ambientes/',
@@ -51,7 +52,7 @@ const ModalAmbients = ({
     };
 
 
-    const editAmbient = async () => {
+    const editAmbiente = async () => {
         try {
             console.log("Data sent to update:", {
                 sig: sig,
@@ -60,7 +61,7 @@ const ModalAmbients = ({
                 responsavel: responsavel
             });
 
-            await axios.put(`http://127.0.0.1:8000/api/ambiente/${selectedAmbient.id}/`,
+            await axios.put(`http://127.0.0.1:8000/api/ambiente/${selectedAmbiente.id}/`,
                 {
                     sig: sig,
                     descricao: descricao,
@@ -83,74 +84,93 @@ const ModalAmbients = ({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[6px] bg-black/75">
-            <div className="bg-emerald-600 w-[30vw] rounded-[36px] shadow-lg">
-                
-                <div className="flex justify-center items-center">
-                    <h2 className="text-white font-bold text-[26px] max-w-[26vw] text-center pt-[6vh] mb-[6vh]">{selectedAmbient ? `Editar - ${selectedAmbient.descricao}` : "Register!"}</h2>
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[6px] bg-black/75">
+
+            <form
+                onSubmit={handleSubmit}
+                className="z-60 bg-white w-[32vw] rounded-[36px] shadow-lg pt-[2rem] flex flex-col items-center justify-center">
+
+                {/* Título do formulário */}
+                <span
+                    className="font-bold text-[26px] mb-[1rem] place-self-center self-center">
+                    {selectedAmbiente ? `Editar ${selectedAmbiente.descricao}` : "Cadastrar novo ambiente!"}
+                </span>
+
+                {/* Área dos inputs */}
+                <fieldset className="flex items-start justify-center flex-col">
+
+                    <label htmlFor="sig"
+                        className="mt-[2rem]">
+                        Informe SIG
+                    </label>
+                    <input
+                        name="sig"
+                        className="border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
+                        value={sig}
+                        placeholder="SIG do ambiente"
+                        onChange={(e) => setSig(e.target.value)}
+                    />
+
+                    <label htmlFor="descricao"
+                        className="mt-[2rem]">
+                        Informe a descrição do ambiente
+                    </label>
+                    <input
+                        name="descricao"
+                        className="border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
+                        value={descricao}
+                        placeholder="Descrição do ambiente"
+                        onChange={(e) => setDescricao(e.target.value)}
+                    />
+
+                    <label htmlFor="ni"
+                        className="mt-[2rem]">
+                        Informe o NI do ambiente
+                    </label>
+                    <input
+                        name="ni"
+                        className="border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
+                        value={ni}
+                        placeholder="Ni do ambiente"
+                        onChange={(e) => setNi(e.target.value)}
+                    />
+
+                    <label htmlFor="responsavel"
+                        className="mt-[2rem]">
+                        Informe o responsável do ambiente
+                    </label>
+                    <input
+                        name="responsavel"
+                        className="border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
+                        value={responsavel}
+                        placeholder="Responsável do ambiente"
+                        onChange={(e) => setResponsavel(e.target.value)}
+                    />
+
+                </fieldset>
+
+                {/* Área do botão de salvar */}
+                <div className="flex items-center justify-center mt-[2rem]">
+                    <button id="botao_envioh"
+                        className="bg-black text-white p-[0.5rem] w-[25vw] h-[2.5rem] rounded-[16px] duration-200 easy-in-out hover:scale-110 text-[18px] cursor-pointer"
+                        type="submit"
+                        onClick={selectedAmbiente ? editAmbiente : newAmbiente}>Salvar
+                    </button>
                 </div>
-    
-                <div className="">
-                    <form onSubmit={handleSubmit}>
-                        <div className="test_container">
-                            <div className="flex justify-center items-center flex-col">
 
-                                <input
-                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={sig}
-                                    type="number"
-                                    placeholder="Ambient sig"
-                                    onChange={(e) => setSig(e.target.value)}
-                                />
-
-                                
-                                <input
-                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={ni}
-                                    placeholder="Ambient ni"
-                                    onChange={(e) => setNi(e.target.value)}
-                                />
-
-
-                                <input
-                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={descricao}
-                                    placeholder="Ambient description"
-                                    onChange={(e) => setDescricao(e.target.value)}
-                                />
-
-
-                                <input
-                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[8vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={responsavel}
-                                    placeholder="Ambient's responsable"
-                                    onChange={(e) => setResponsavel(e.target.value)}
-                                />
-
-
-                            </div>
-
-                    
-                        </div>
-
-                        <div className="flex items-center justify-center">
-                            <button id="botao_envioh" 
-                                className="bg-sky-500 text-white p-[0.5rem] w-[14vw] rounded-[18px] duration-200 easy-in-out hover:scale-110 text-[18px] cursor-pointer"
-                                type="submit"
-                                onClick={selectedAmbient ? editAmbient : newAmbient}>Salvar
-                            </button>
-                        </div>
-
-                        <div className="flex items-center justify-center text-white text-2xl pb-[4vh] pt-[4vh]">
-                            <button className="duration-75 ease-in-out hover:text-red-300 hover:scale-125 cursor-pointer" onClick={onClose}>X</button>
-                        </div>
-
-                    </form>
+                {/* Área do botão de fechar modal */}
+                <div className="flex items-center justify-center text-2xl pb-[4vh] pt-[4vh]">
+                    <button
+                        className="duration-75 ease-in-out hover:scale-125 cursor-pointer"
+                        onClick={onClose}>
+                        < IoIosCloseCircle
+                            className="text-5xl"
+                        />
+                    </button>
                 </div>
-            </div>
+
+            </form>
         </div>
     )
 }
-
-
-export default ModalAmbients

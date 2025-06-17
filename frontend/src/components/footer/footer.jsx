@@ -3,7 +3,7 @@ export function Footer() {
 
     return (
         <footer
-            className="ml-[6.5rem] bg-[#298287] text-white flex items-center justify-center">
+            className="bg-[#298287] text-white flex items-center justify-center">
 
             {/* Mensagem de direitos autorais */}
             <p

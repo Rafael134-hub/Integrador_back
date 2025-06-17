@@ -123,6 +123,9 @@ export function Sensores() {
                         modalOpen={modalOpen}
                         setModalOpen={setModalOpen}
                         setSelectedSensor={setSelectedSensor}
+                        setData={setData} 
+                        setArrow={setArrow}
+                        arrow={arrow}
                     />
 
                     {/* Área de paginação da tabela */}

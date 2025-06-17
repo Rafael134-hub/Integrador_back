@@ -1,8 +1,11 @@
 import { MdEdit } from "react-icons/md";
 import { IoTrashBinSharp } from "react-icons/io5";
+import axios from "axios";
 
 
-export function TabelaSensores({ data, setSelectedSensor, setModalOpen }) {
+export function TabelaSensores({ data, setSelectedSensor, setModalOpen, setData, setArrow, arrow }) {
+
+    const token = localStorage.getItem("token");
 
     const delete_sensor = async (id) => {
         if (window.confirm("Are u sure?")) {

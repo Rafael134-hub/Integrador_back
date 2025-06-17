@@ -29,7 +29,7 @@ export function Header() {
     }, []);
 
     return (
-        <header className="ml-[6.5rem] bg-[#298287] pl-[2rem] pr-[2rem] p-[1rem] text-white flex items-center justify-between">
+        <header className="bg-[#298287] pl-[2rem] pr-[2rem] p-[1rem] text-white flex items-center justify-between">
 
             {/* Área do nome do usuário e ícone */}
             <div className="flex items-center justify-center">
