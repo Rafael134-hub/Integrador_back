@@ -4,7 +4,7 @@ export function Mapa() {
 
     return (
 
-        <main className="pl-[6.5rem] bg-black">
+        <main>
 
             {/* Seção do título da página */}
             <section

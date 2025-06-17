@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const ModalHistorics = ({
+export function ModalHistoricos ({
     isOpen,
     onClose,
     selectedHistoric,
     arrow,
     setArrow
-}) => {
+}) {
     if (!isOpen) return null
 
     const [id, setId] = useState(selectedHistoric?.id ?? '');
@@ -145,6 +145,3 @@ const ModalHistorics = ({
         </div>
     )
 }
-
-
-export default ModalHistorics
