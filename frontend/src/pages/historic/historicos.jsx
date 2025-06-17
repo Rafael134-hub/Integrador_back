@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import { FaPlus } from 'react-icons/fa'
 import axios from 'axios';
-import { TabelaHistóricos } from "../../components/tabelas/tabelaHistorico/tabelaHistorico";
+import { TabelaHistoricos } from "../../components/tabelas/tabelaHistorico/tabelaHistorico";
 import { ModalHistoricos } from "../../modals/historics/modal_historic";
 import { BotaoExportar } from "../../components/botoes/botaoExportar/botaoExportar";
 import { BotaoCadastrar } from "../../components/botoes/botaoCadastrar/botaoCadastrar";
 import { FilterSensores } from "../../components/filter/filter_sensors/filter_sensors";
 import { IndicadorPagina } from "../../components/indicadorPagina/indicadorPagina";
 
-export function Sensores() {
+export function Historicos() {
 
     const [data, setData] = useState([]);
     const token = localStorage.getItem('token');
     const [arrow, setArrow] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedSensor, setSelectedSensor] = useState(null);
+    const [selectedHistorico, setSelectedHistorico] = useState(null);
 
     // useStates do filtro
     const [macAddress, setMacAddress] = useState("");
@@ -30,7 +30,7 @@ export function Sensores() {
         const fetchData = async () => {
 
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/historicos/?id_sensor=`,
+                const response = await axios.get(`http://127.0.0.1:8000/api/historicos/`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -46,7 +46,7 @@ export function Sensores() {
         }
 
         fetchData()
-    }, [arrow, macAddress, status, sensor]);
+    }, [arrow ]);
 
     // Variáveis da paginação
     const [paginaAtual, setPaginaAtual] = useState(1);
@@ -68,7 +68,7 @@ export function Sensores() {
                     <div className="flex flex-col items-center mt-[4rem] w-fit">
 
                         <h1 className="text-[40px] font-bold text-white">
-                            Gerencie os <span className="text-[#99FFE1]">{"Sensores!"}</span>
+                            Gerencie os <span className="text-[#99FFE1]">{"Históricos!"}</span>
                         </h1>
 
                         {/* Elemento decorativo que fica embaixo do título */}
@@ -85,27 +85,27 @@ export function Sensores() {
                 <div
                     className="flex items-center justify-between w-[90%]">
 
-                    <FilterSensores
+                    {/* <FilterSensores
                         macAdress={macAddress}
                         setMacAdress={setMacAddress}
                         sensor={sensor}
                         setSensor={setSensor}
                         status={status}
                         setStatus={setStatus}
-                    />
+                    /> */}
 
                     {/* Área de cadastro e exportar, div usada para alinhar elementos */}
                     <div className="min-w-[14%] gap-[2rem] w-fit flex items-center justify-between">
                         <BotaoCadastrar
-                            tituloBotao={"Sensor"}
+                            tituloBotao={"Histórico"}
                             setOpenModal={setModalOpen}
-                            setSelectedSensor={setSelectedSensor}
+                            setSelectedSensor={setSelectedHistorico}
                         />
 
                         < BotaoExportar
                             urlExportar={`http://127.0.0.1:8000/api/exportar/sensores/?mac_adress=${macAddress}&sensor=${sensor}&status=${status}`}
-                            nomePlanilha={"sensores"}
-                            tituloBotao={"Sensores"}
+                            nomePlanilha={"historicos"}
+                            tituloBotao={"historicos"}
                         />
                     </div>
 
@@ -118,11 +118,11 @@ export function Sensores() {
             <section className="flex items-center justify-center mb-[8rem]">
 
                 <div className="flex items-center justify-center flex-col bg-white p-[2rem] rounded-3xl w-[90%]">
-                    <TabelaSensores
+                    <TabelaHistoricos
                         data={itensAtuais}
                         modalOpen={modalOpen}
                         setModalOpen={setModalOpen}
-                        setSelectedSensor={setSelectedSensor}
+                        setSelectedHistorico={setSelectedHistorico}
                         setData={setData} 
                         setArrow={setArrow}
                         arrow={arrow}
@@ -141,10 +141,10 @@ export function Sensores() {
 
 
             {/* Modal de cadastro e edição */}
-            <ModalSensores className="self-center"
+            <ModalHistoricos
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
-                selectedSensor={selectedSensor}
+                selectedHistoric={selectedHistorico}
                 arrow={arrow}
                 setArrow={setArrow}
             />

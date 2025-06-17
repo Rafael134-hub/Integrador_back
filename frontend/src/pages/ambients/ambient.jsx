@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaPlus } from 'react-icons/fa'
 import axios from 'axios';
-import { TabelaAmbientes } from "../../components/tabelas/tabelaSensores/tabelaAmbientes/tabelaAmbientes";
+import { TabelaAmbientes } from "../../components/tabelas/tabelaAmbientes/tabelaAmbientes";
 import { ModalAmbientes } from "../../modals/ambients/modal_ambient";
 import { BotaoExportar } from "../../components/botoes/botaoExportar/botaoExportar";
 import { BotaoCadastrar } from "../../components/botoes/botaoCadastrar/botaoCadastrar";

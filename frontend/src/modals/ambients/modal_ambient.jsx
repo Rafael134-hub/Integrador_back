@@ -89,7 +89,7 @@ export function ModalAmbientes({
 
             <form
                 onSubmit={handleSubmit}
-                className="z-60 bg-white w-[32vw] rounded-[36px] shadow-lg pt-[2rem] flex flex-col items-center justify-center">
+                className="z-60 bg-white w-[32rem] rounded-[36px] shadow-lg pt-[2rem] flex flex-col items-center justify-center">
 
                 {/* Título do formulário */}
                 <span
@@ -151,9 +151,9 @@ export function ModalAmbientes({
                 </fieldset>
 
                 {/* Área do botão de salvar */}
-                <div className="flex items-center justify-center mt-[2rem]">
+                <div className="flex items-center justify-center mt-[3rem]">
                     <button id="botao_envioh"
-                        className="bg-black text-white p-[0.5rem] w-[25vw] h-[2.5rem] rounded-[16px] duration-200 easy-in-out hover:scale-110 text-[18px] cursor-pointer"
+                        className="bg-black text-white p-[0.5rem] w-[25rem] h-[2.5rem] rounded-[16px] duration-200 easy-in-out hover:scale-110 text-[18px] cursor-pointer"
                         type="submit"
                         onClick={selectedAmbiente ? editAmbiente : newAmbiente}>Salvar
                     </button>

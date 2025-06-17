@@ -3,7 +3,7 @@ import { IoTrashBinSharp } from "react-icons/io5";
 import axios from "axios";
 
 
-export function TabelaHistóricos({ data, setSelectedHistorico, setModalOpen, setData, setArrow, arrow }) {
+export function TabelaHistoricos({ data, setSelectedHistorico, setModalOpen, setData, setArrow, arrow }) {
 
     const token = localStorage.getItem("token");
 
@@ -25,8 +25,8 @@ export function TabelaHistóricos({ data, setSelectedHistorico, setModalOpen, se
         }
     }
 
-    const update_historico = (sensor) => {
-        setSelectedHistorico(sensor);
+    const update_historico = (historico) => {
+        setSelectedHistorico(historico);
         setModalOpen(true);
     }
 
@@ -46,48 +46,54 @@ export function TabelaHistóricos({ data, setSelectedHistorico, setModalOpen, se
             </thead>
             <tbody
                 className="text-[16px]">
-                {data.map((historico) => (
-                    <tr
-                        key={historico.id}
-                        className="text-center border-none cursor-pointer hover:bg-[#99FFE1]">
+                {data.map((historico) => {
 
-                        <td
-                            className="p-5 border-white"
-                            onClick={() => update_historico(historico)}>
-                            {historico.sensor.sensor}
-                        </td>
+                    const dataHistorico = new Date(historico.timestamp);
 
-                        <td
-                            className="p-5 border-none"
-                            onClick={() => update_historico(historico)}>
-                            {historico.ambiente.descricao}
-                        </td>
+                    return (
+                        <tr
+                            key={historico.id}
+                            className="text-center border-none cursor-pointer hover:bg-[#298287] hover:text-white">
 
-                        <td
-                            className="p-5 border-none"
-                            onClick={() => update_historico(historico)}>
-                            {historico.timestamp}
-                        </td>
+                            <td
+                                className="p-5 border-white"
+                                onClick={() => update_historico(historico)}>
+                                {historico.sensor.sensor}
+                            </td>
 
-                        <td
-                            className="p-5 border-none"
-                            onClick={() => update_historico(historico)}>
-                            {historico.valor}
-                        </td>
+                            <td
+                                className="p-5 border-none"
+                                onClick={() => update_historico(historico)}>
+                                {historico.ambiente.descricao}
+                            </td>
+
+                            <td
+                                className="p-5 border-none"
+                                onClick={() => update_historico(historico)}>
+                                {dataHistorico.toLocaleString('pt-BR').replace(",", "")}
+                            </td>
+
+                            <td
+                                className="p-5 border-none"
+                                onClick={() => update_historico(historico)}>
+                                {historico.valor}
+                            </td>
 
 
-                        <td
-                            className="p-6 border-none flex items-center justify-center">
+                            <td
+                                className="p-6 border-none flex items-center justify-center">
 
-                            <div
-                                className="flex items-center justify-between text-2xl w-[90%]">
-                                <MdEdit className="cursor-pointer duration-100 ease-in hover:scale-125 hover:text-emerald-800" onClick={() => update_historico(sensor)} />
-                                <IoTrashBinSharp className="cursor-pointer duration-100 ease-in hover:scale-125 hover:text-red-700" onClick={() => delete_historico(sensor.id)} />
-                            </div>
+                                <div
+                                    className="flex items-center justify-between text-2xl w-[90%]">
+                                    <MdEdit className="cursor-pointer duration-100 ease-in hover:scale-125" onClick={() => update_historico(historico)} />
+                                    <IoTrashBinSharp className="cursor-pointer duration-100 ease-in hover:scale-125" onClick={() => delete_historico(historico.id)} />
+                                </div>
 
-                        </td>
-                    </tr>
-                ))}
+                            </td>
+                        </tr>
+                    )
+
+                })}
             </tbody>
         </table>
     )

@@ -80,7 +80,7 @@ class AmbientesDetailView(RetrieveUpdateDestroyAPIView):
 @permission_classes([IsAuthenticated])
 def listar_historicos(request):
     if request.method == 'GET':
-        queryset = Historico.objects.all()
+        queryset = Historico.objects.select_related("id_sensor", "id_ambiente").all()
         serializer = Historico_serializer(queryset, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
@@ -92,7 +92,7 @@ def listar_historicos(request):
             return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 class HistoricosView(ListCreateAPIView):
-    queryset = Historico.objects.all()
+    queryset = Historico.objects.select_related("id_sensor", "id_ambiente").all()
     serializer_class = Historico_serializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
@@ -100,7 +100,7 @@ class HistoricosView(ListCreateAPIView):
     
 
 class HistoricosDetailView(RetrieveUpdateDestroyAPIView):
-    queryset = Historico.objects.all()
+    queryset = Historico.objects.select_related("id_sensor", "id_ambiente").all()
     serializer_class = Historico_serializer
     permission_classes = [IsAuthenticated]
 
