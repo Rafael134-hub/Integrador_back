@@ -17,7 +17,6 @@ export function TabelaHistoricos({ data, setSelectedHistorico, setModalOpen, set
                         }
                     }
                 )
-                setData(data.filter((historico) => { historico.id !== id }));
                 setArrow(!arrow);
             } catch (error) {
                 console.error(error);
@@ -57,25 +56,29 @@ export function TabelaHistoricos({ data, setSelectedHistorico, setModalOpen, set
 
                             <td
                                 className="p-5 border-white"
-                                onClick={() => update_historico(historico)}>
+                                onClick={() => update_historico(historico)}
+                                onFocus={() => update_historico(historico)}>
                                 {historico.sensor.sensor}
                             </td>
 
                             <td
                                 className="p-5 border-none"
-                                onClick={() => update_historico(historico)}>
+                                onClick={() => update_historico(historico)}
+                                onFocus={() => update_historico(historico)}>
                                 {historico.ambiente.descricao}
                             </td>
 
                             <td
                                 className="p-5 border-none"
-                                onClick={() => update_historico(historico)}>
+                                onClick={() => update_historico(historico)}
+                                onFocus={() => update_historico(historico)}>
                                 {dataHistorico.toLocaleString('pt-BR').replace(",", "")}
                             </td>
 
                             <td
                                 className="p-5 border-none"
-                                onClick={() => update_historico(historico)}>
+                                onClick={() => update_historico(historico)}
+                                onFocus={() => update_historico(historico)}>
                                 {historico.valor}
                             </td>
 
@@ -85,8 +88,12 @@ export function TabelaHistoricos({ data, setSelectedHistorico, setModalOpen, set
 
                                 <div
                                     className="flex items-center justify-between text-2xl w-[90%]">
-                                    <MdEdit className="cursor-pointer duration-100 ease-in hover:scale-125" onClick={() => update_historico(historico)} />
-                                    <IoTrashBinSharp className="cursor-pointer duration-100 ease-in hover:scale-125" onClick={() => delete_historico(historico.id)} />
+                                    <MdEdit className="cursor-pointer duration-100 ease-in hover:scale-125" 
+                                        onClick={() => update_historico(historico)} 
+                                        onFocus={() => update_historico(historico)} />
+                                    <IoTrashBinSharp className="cursor-pointer duration-100 ease-in hover:scale-125" 
+                                    onClick={() => delete_historico(historico.id)} 
+                                    onFocus={() => delete_historico(historico.id)}/>
                                 </div>
 
                             </td>

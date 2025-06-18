@@ -1,112 +1,197 @@
-import React, { useState } from "react";
-import { IoSend } from "react-icons/io5";
-import { RiArrowDropDownLine, RiArrowDropUpLine, RiResetLeftFill } from "react-icons/ri";
+import React, { useState, useEffect } from "react";
+import { IoIosCloseCircle } from "react-icons/io";
+import { RiResetLeftLine } from "react-icons/ri";
+import { FaFilter } from "react-icons/fa";
+import axios from "axios";
 
-const FilterHistorics = ({
-    isFilterOpen,
-    onFilterClose,
-    originalDataFilter,
-    setDadosFilter,
-}) => {
-    if (!isFilterOpen) return null;
+export function FilterHistoricos({
+    ambiente,
+    setAmbiente,
+    sensor,
+    setSensor,
+    timestamp,
+    setTimestemp,
+    data,
+    setData
+}) {
 
-    const [isNameOpen, setIsNameOpen] = useState(false);
-    const [isIDOpen, setIsIDOpen] = useState(false);
-    const [idContent, setIdContent] = useState("");
-    const [nameContent, setNameContent] = useState("");
+    const [sensores, setSensores] = useState([]);
+    const [ambientes, setAmbientes] = useState([]);
 
-    function filterData() {
-        let filteredData = originalDataFilter;
-    
-        if (idContent.trim() !== "") {
-            filteredData = filteredData.filter((item) =>
-                item.id_sensor === idContent.trim()
-            );
+    const [openButton, setOpenButton] = useState(false);
+    const [openFilter, setOpenFilter] = useState(false);
+
+    const token = localStorage.getItem("token");
+
+    useEffect(() => {
+
+        if (!token) return;
+        console.log("Data: ", data);
+
+        const fetchSensores = async () => {
+
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/sensores/`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                )
+                setSensores(response.data);
+                console.log("Dadoohs: ", data);
+
+            } catch (error) {
+                console.log(error)
+            }
+        };
+
+        const fetchAmbientes = async () => {
+
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/ambientes/`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                )
+                setAmbientes(response.data);
+                console.log("Dadoohs: ", data);
+
+            } catch (error) {
+                console.log(error)
+            }
         }
-    
-        if (nameContent.trim() !== "") {
-            filteredData = filteredData.filter((item) =>
-                item.id_ambiente === nameContent.trim()
-            );
-        }
-    
-        setDadosFilter(filteredData);
-    }
 
-    
+        fetchSensores();
+        fetchAmbientes();
+    }, []);
+
+    const cleanFilter = () => {
+        setAmbiente("");
+        setSensor("");
+        setTimestemp("");
+    };
+
     return (
-        <div className="flex justify-center items-center mt-[1vh]">
-            <div className="flex justify-center items-center">
-                <div className="w-[22vw] bg-teal-700 rounded-3xl p-6">
-                    <h3 className="text-white text-xl">Filter per:</h3>
-                    
-                    <div className="bg-teal-600 mb-[4vh] mt-[1.5rem] p-[0.5rem] rounded-xl">
 
-                        <div className="flex items-center justify-between">
-                            <p className="text-white text-l">Historics sensor</p>
-                            {isIDOpen == true ? (
-                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsIDOpen(false)}></RiArrowDropUpLine>
-                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsIDOpen(true)}></RiArrowDropDownLine>}
+        <>
+            <button
+                className="h-[4rem] w-fit pl-[1rem] pr-[1rem] rounded-xl bg-[#99FFE1] cursor-pointer transition-all duration-300 ease-in-out "
+                // Ativa o evento de exportação        
+                // Define os estados para abir ou fechar o botão
+                onClick={openFilter ? () => setOpenFilter(false) : () => setOpenFilter(true)}
+                onMouseEnter={() => setOpenButton(true)}
+                onFocus={() => setOpenButton(true)}
+                onMouseLeave={() => setOpenButton(false)}
+                onBlur={() => setOpenButton(false)}>
 
-                        </div>
-                        <div>
-                            {isIDOpen == true ? (
-                                <div className="flex items-center justify-between mt-4 pb-1">
-                                    <input placeholder="Type the ambient SLG" value={idContent} onChange={(e) => setIdContent(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
-                                    <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
+                <div className=' flex items-center justify-center'>
+                    <FaFilter
+                        className="text-4xl"
+                    />
 
-                                </div>
-                            ) : null}
-                        </div>
-                    </div>
-                        
+                    {/* Área do texo do botão, que só é mostrada no hover ou onFocus, e que possui uma transição suave */}
+                    <span className={`font-bold transition-all duration-200 ease-in-out overflow-hidden ${openButton ? "opacity-100 max-w-[100%] ml-[1rem]" : "opacity-0 max-w-0 ml-0"}`}>
+                        Filtrar Sensores
+                    </span>
 
-                    <div className="bg-teal-600 mb-[4vh] mt-[1.5rem] p-[0.5rem] rounded-xl">
-
-                        <div className="flex items-center justify-between">
-                            <p className="text-white text-l">Historics ambient</p>
-                            {isNameOpen == true ? (
-                                <RiArrowDropUpLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsNameOpen(false)}></RiArrowDropUpLine>
-                            ) : <RiArrowDropDownLine className="text-white text-4xl duration-200 easy-in-out hover:scale-140" onClick={() => setIsNameOpen(true)}></RiArrowDropDownLine>}
-
-                        </div>
-                        <div>
-                            {isNameOpen == true ? (
-                                <div className="flex items-center justify-between mt-4 pb-1">
-                                    <input placeholder="Type the ambient description" value={nameContent} onChange={(e) => setNameContent(e.target.value)} type="text" className="bg-teal-500 rounded-[6px] p-1 w-[80%] text-white focus:outline-none"></input>
-                                    <IoSend onClick={filterData} className="text-white mr-2 text-xl duration-200 easy-in-out hover:scale-125"></IoSend>
-
-                                </div>
-                            ) : null}
-                        </div>
-                    </div>
-
-                    <div className="flex items-center justify-between pl-1 mt-[1.5rem]">
-
-                        <div className="flex items-center p-2 rounded-xl duration-150 ease-in-out hover:bg-teal-600 hover:scale-115 hover:ml-2" onClick={() => {
-                            setDadosFilter(originalDataFilter);
-                            setNameContent("");
-                            setIdContent("");
-                        }}>
-                            <RiResetLeftFill className="text-white text-2xl mr-2"></RiResetLeftFill>
-                            <p className="text-[16px] text-white">Remove all filters</p>
-                        </div>
-
-                        <p className="text-white text-3xl cursor-pointer duration-100 easy-in-out hover:scale-125 pr-1" onClick={
-                            () => {
-                                onFilterClose();
-                                setNameContent("");
-                                setIdContent("");
-                            }}>x</p>
-
-                    </div>
-                    
                 </div>
-                
-            </div>
-        </div>
-        
+
+            </button>
+
+            {
+                openFilter ?
+
+                    <form
+                        className="bg-[#298287] w-fit absolute mt-[35.5rem] ml-[1rem] p-[1.5rem] pr-[2rem] pl-[2rem] rounded-2xl">
+                        <fieldset
+                            className="flex flex-col text-left text-white">
+                            <legend
+                                className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Históricos</legend>
+
+                            <label htmlFor="timestamp">
+                                Informe a data e hora
+                            </label>
+                            <input
+                                name="timestamp"
+                                type="datetime-local"
+                                value={timestamp}
+                                onChange={(e) => setTimestemp(e.target.value)}
+                                placeholder="Data e hora"
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]">
+                            </input>
+
+
+                            <label htmlFor="sensor"
+                                className="mt-[2rem]">
+                                Informe o sensor selecionado
+                            </label>
+
+                            <select
+                                name="sensor"
+                                value={sensor}
+                                onChange={(e) => setSensor(e.target.value)}
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+                                {
+                                    sensores.map((sensor, index) => (
+                                        <option
+                                            key={index}
+                                            className="bg-[#298287] text-white"
+                                            value={sensor.id}>
+                                            {sensor.mac_adress}
+                                        </option>
+                                    ))}
+                            </select>
+
+
+                            <label htmlFor="ambiente"
+                                className="mt-[2rem]">
+                                Informe o ambiente selecionado
+                            </label>
+
+                            <select
+                                name="ambiente"
+                                value={ambiente}
+                                onChange={(e) => setAmbiente(e.target.value)}
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+                                {
+                                    ambientes.map((ambiente, index) => (
+                                        <option
+                                            key={index}
+                                            className="bg-[#298287] text-white"
+                                            value={ambiente.id}>
+                                            {ambiente.descricao}
+                                        </option>
+                                    ))}
+                            </select>
+
+                        </fieldset>
+
+                        <div className="flex items-center justify-between mt-[2.5rem]">
+                            <button>
+                                <RiResetLeftLine
+                                    className="text-4xl cursor-pointer"
+                                    onClick={cleanFilter} />
+                            </button>
+
+                            <button>
+                                <IoIosCloseCircle
+                                    className="text-4xl cursor-pointer"
+                                    onClick={() => setOpenFilter(false)} />
+                            </button>
+                        </div>
+
+                    </form>
+
+                    :
+
+                    <form>
+                    </form>
+            }
+
+        </>
+
     )
 }
-
-export default FilterHistorics

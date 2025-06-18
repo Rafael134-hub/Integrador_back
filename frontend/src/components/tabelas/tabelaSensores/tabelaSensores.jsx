@@ -17,7 +17,6 @@ export function TabelaSensores({ data, setSelectedSensor, setModalOpen, setData,
                         }
                     }
                 )
-                setData(data.filter((sensor) => { sensor.id !== id }));
                 setArrow(!arrow);
             } catch (error) {
                 console.error(error);
@@ -51,7 +50,7 @@ export function TabelaSensores({ data, setSelectedSensor, setModalOpen, setData,
                 {data.map((sensor) => (
                     <tr
                         key={sensor.id}
-                        className="text-center border-none cursor-pointer hover:bg-[#99FFE1]">
+                        className="text-center border-none cursor-pointer hover:bg-[#298287] hover:text-white">
 
                         <td
                             className="p-5 border-white"
@@ -94,8 +93,8 @@ export function TabelaSensores({ data, setSelectedSensor, setModalOpen, setData,
 
                             <div
                                 className="flex items-center justify-between text-2xl w-[90%]">
-                                <MdEdit className="cursor-pointer duration-100 ease-in hover:scale-125 hover:text-emerald-800" onClick={() => update_sensor(sensor)} />
-                                <IoTrashBinSharp className="cursor-pointer duration-100 ease-in hover:scale-125 hover:text-red-700" onClick={() => delete_sensor(sensor.id)} />
+                                <MdEdit className="cursor-pointer duration-100 ease-in hover:scale-125" onClick={() => update_sensor(sensor)} />
+                                <IoTrashBinSharp className="cursor-pointer duration-100 ease-in hover:scale-125" onClick={() => delete_sensor(sensor.id)} />
                             </div>
 
                         </td>

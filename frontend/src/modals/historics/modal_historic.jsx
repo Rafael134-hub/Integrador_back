@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import { IoIosCloseCircle } from "react-icons/io";
 
-export function ModalHistoricos ({
+export function ModalHistoricos({
     isOpen,
     onClose,
-    selectedHistoric,
+    selectedHistorico,
     arrow,
     setArrow
 }) {
     if (!isOpen) return null
 
-    const [id, setId] = useState(selectedHistoric?.id ?? '');
-    const [id_sensor, setIdSensor] = useState(selectedHistoric?.id_sensor ?? '');
-    const [id_ambiente, setIdAmbiente] = useState(selectedHistoric?.id_ambiente ?? '');
-    const [valor, setValor] = useState(selectedHistoric?.valor ?? '');
-    const [timestamp, setTimestamp] = useState(selectedHistoric?.timestamp ?? '');
+    const [id, setId] = useState(selectedHistorico?.id ?? '');
+    const [idSensor, setIdSensor] = useState(selectedHistorico?.id_sensor ?? '');
+    const [idAmbiente, setIdAmbiente] = useState(selectedHistorico?.id_ambiente ?? '');
+    const [valor, setValor] = useState(selectedHistorico?.valor ?? '');
+    const [timestamp, setTimestamp] = useState(selectedHistorico?.timestamp ?? '');
+    const [sensores, setSensores] = useState([]);
+    const [ambientes, setAmbientes] = useState([]);
 
     const token = localStorage.getItem('token')
 
@@ -24,14 +27,59 @@ export function ModalHistoricos ({
     }
 
 
-    const newHistoric = async () => {
+    useEffect(() => {
+
+        if (!token) return;
+
+        const fetchSensores = async () => {
+
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/sensores/`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                )
+                setSensores(response.data);
+                console.log("Dadoohs: ", data);
+
+            } catch (error) {
+                console.log(error)
+            }
+        };
+
+        const fetchAmbientes = async () => {
+
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/ambientes/`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                )
+                setAmbientes(response.data);
+                console.log("Dadoohs: ", data);
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        fetchSensores();
+        fetchAmbientes();
+    }, []);
+
+
+    const newHistorico = async () => {
 
         try {
             await axios.post('http://127.0.0.1:8000/api/historicos/',
 
                 {
-                    id_sensor: id_sensor,
-                    id_ambiente: id_ambiente,
+                    id_sensor: idSensor,
+                    id_ambiente: idAmbiente,
                     valor: valor,
                     timestamp: timestamp
 
@@ -52,13 +100,13 @@ export function ModalHistoricos ({
     };
 
 
-    const editHistoric = async () => {
+    const editHistorico = async () => {
         try {
 
-            await axios.put(`http://127.0.0.1:8000/api/historico/${selectedHistoric.id}/`,
+            await axios.put(`http://127.0.0.1:8000/api/historico/${selectedHistorico.id}/`,
                 {
-                    id_sensor: id_sensor,
-                    id_ambiente: id_ambiente,
+                    id_sensor: idSensor,
+                    id_ambiente: idAmbiente,
                     valor: valor,
                     timestamp: timestamp
                 },
@@ -77,71 +125,124 @@ export function ModalHistoricos ({
         }
     };
 
+    function formatarParaInput(datetimeString) {
+        const date = new Date(datetimeString);
+        const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+        return local.toISOString().slice(0, 16);
+    };
+
+    const tituloData = new Date(timestamp);
+
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[6px] bg-black/75">
-            <div className="bg-emerald-600 w-[30vw] rounded-[36px] shadow-lg">
-                
-                <div className="flex justify-center items-center">
-                    <h2 className="text-white font-bold text-[26px] max-w-[26vw] text-center pt-[6vh] mb-[6vh]">{selectedHistoric ? `Editar Histórico - ${selectedHistoric.id}` : "Register!"}</h2>
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[6px] bg-black/75">
+
+            <form
+                onSubmit={handleSubmit}
+                className="z-60 bg-white w-[32rem] rounded-[36px] shadow-lg pt-[2rem] flex flex-col items-center justify-center">
+
+                {/* Título do formulário */}
+                <span
+                    className="font-bold text-[26px] mb-[1rem] place-self-center self-center">
+                    {selectedHistorico ? `Editar ${tituloData.toLocaleString('pt-BR').replace(",", "")}` : "Cadastrar novo histórico!"}
+                </span>
+
+                {/* Área dos inputs */}
+                <fieldset className="flex items-start justify-center flex-col">
+
+                    <label htmlFor="timestamp">
+                        Informe a data e hora
+                    </label>
+                    <input
+                        name="timestamp"
+                        type="datetime-local"
+                        value={timestamp ? formatarParaInput(timestamp) : ""}
+                        onChange={(e) => setTimestamp(e.target.value)}
+                        placeholder="Data e hora"
+                        className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]">
+                    </input>
+
+
+                    <label htmlFor="valor"
+                        className="mt-[2rem]">
+                        Informe o valor
+                    </label>
+                    <input
+                        name="valor"
+                        type="number"
+                        value={valor}
+                        onChange={(e) => setValor(e.target.value)}
+                        placeholder="Valor de registro"
+                        className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]">
+                    </input>
+
+
+                    <label htmlFor="sensor"
+                        className="mt-[2rem]">
+                        Informe o sensor selecionado
+                    </label>
+
+                    <select
+                        name="sensor"
+                        value={idSensor}
+                        onChange={(e) => setIdSensor(e.target.value)}
+                        className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+                        {
+                            sensores.map((sensor, index) => (
+                                <option
+                                    key={index}
+                                    className="bg-[#298287] text-white"
+                                    value={sensor.id}>
+                                    {sensor.mac_adress}
+                                </option>
+                            ))}
+                    </select>
+
+
+                    <label htmlFor="ambiente"
+                        className="mt-[2rem]">
+                        Informe o ambiente selecionado
+                    </label>
+
+                    <select
+                        name="ambiente"
+                        value={idAmbiente}
+                        onChange={(e) => setIdAmbiente(e.target.value)}
+                        className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+                        {
+                            ambientes.map((ambiente, index) => (
+                                <option
+                                    key={index}
+                                    className="bg-[#298287] text-white"
+                                    value={ambiente.id}>
+                                    {ambiente.descricao}
+                                </option>
+                            ))}
+                    </select>
+
+                </fieldset>
+
+                {/* Área do botão de salvar */}
+                <div className="flex items-center justify-center mt-[3rem]">
+                    <button id="botao_envioh"
+                        className="bg-black text-white p-[0.5rem] w-[25rem] h-[2.5rem] rounded-[16px] duration-200 easy-in-out hover:scale-110 text-[18px] cursor-pointer"
+                        type="submit"
+                        onClick={selectedHistorico ? editHistorico : newHistorico}>Salvar
+                    </button>
                 </div>
-    
-                <div className="">
-                    <form onSubmit={handleSubmit}>
-                        <div className="test_container">
-                            <div className="flex justify-center items-center flex-col">
 
-                                <input
-                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={id_sensor}
-                                    placeholder="Sensor"
-                                    onChange={(e) => setIdSensor(e.target.value)}
-                                />
-                                <input
-                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={id_ambiente}
-                                    placeholder="Ambient"
-                                    onChange={(e) => setIdAmbiente(e.target.value)}
-                                />
-
-
-                                <input
-                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={timestamp}
-                                    placeholder="Timestamp"
-                                    onChange={(e) => setTimestamp(e.target.value)}
-                                />
-
-
-                                <input
-                                    className="bg-emerald-100 w-[24vw] rounded-[6px] p-2 mb-[3vh] duration-50 ease-in-out focus:outline-none hover:bg-emerald-300"
-                                    value={valor}
-                                    placeholder="Valor"
-                                    onChange={(e) => setValor(e.target.value)}
-                                />
-
-
-
-
-                            </div>
-
-                    
-                        </div>
-
-                        <div className="flex items-center justify-center">
-                            <button id="botao_envioh" 
-                                className="bg-sky-500 text-white p-[0.5rem] w-[14vw] rounded-[18px] duration-200 easy-in-out hover:scale-110 text-[18px] cursor-pointer"
-                                type="submit"
-                                onClick={selectedHistoric ? editHistoric : newHistoric}>Salvar
-                            </button>
-                        </div>
-
-                        <div className="flex items-center justify-center text-white text-2xl pb-[4vh] pt-[4vh]">
-                            <button className="duration-75 ease-in-out hover:text-red-300 hover:scale-125 cursor-pointer" onClick={onClose}>X</button>
-                        </div>
-
-                    </form>
+                {/* Área do botão de fechar modal */}
+                <div className="flex items-center justify-center text-2xl pb-[4vh] pt-[4vh]">
+                    <button
+                        className="duration-75 ease-in-out hover:scale-125 cursor-pointer"
+                        onClick={onClose}>
+                        < IoIosCloseCircle
+                            className="text-5xl"
+                        />
+                    </button>
                 </div>
-            </div>
+
+            </form>
         </div>
     )
 }

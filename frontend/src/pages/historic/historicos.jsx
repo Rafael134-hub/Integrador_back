@@ -5,7 +5,7 @@ import { TabelaHistoricos } from "../../components/tabelas/tabelaHistorico/tabel
 import { ModalHistoricos } from "../../modals/historics/modal_historic";
 import { BotaoExportar } from "../../components/botoes/botaoExportar/botaoExportar";
 import { BotaoCadastrar } from "../../components/botoes/botaoCadastrar/botaoCadastrar";
-import { FilterSensores } from "../../components/filter/filter_sensors/filter_sensors";
+import { FilterHistoricos } from "../../components/filter/filter_historics/filter_historic";
 import { IndicadorPagina } from "../../components/indicadorPagina/indicadorPagina";
 
 export function Historicos() {
@@ -17,11 +17,11 @@ export function Historicos() {
     const [selectedHistorico, setSelectedHistorico] = useState(null);
 
     // useStates do filtro
-    const [macAddress, setMacAddress] = useState("");
     const [sensor, setSensor] = useState("");
-    const [status, setStatus] = useState("");
+    const [ambiente, setAmbiente] = useState("");
+    const [timestamp, setTimestamp] = useState("");
 
-    // Pega os sensores atual do banco
+    // Pega os históricos atual do banco
     useEffect(() => {
 
         if (!token) return;
@@ -30,7 +30,7 @@ export function Historicos() {
         const fetchData = async () => {
 
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/historicos/`,
+                const response = await axios.get(`http://127.0.0.1:8000/api/historicos/?timestamp=${timestamp}&id_ambiente=${ambiente}&id_sensor=${sensor}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -46,7 +46,7 @@ export function Historicos() {
         }
 
         fetchData()
-    }, [arrow ]);
+    }, [arrow, sensor, ambiente, timestamp]);
 
     // Variáveis da paginação
     const [paginaAtual, setPaginaAtual] = useState(1);
@@ -85,14 +85,16 @@ export function Historicos() {
                 <div
                     className="flex items-center justify-between w-[90%]">
 
-                    {/* <FilterSensores
-                        macAdress={macAddress}
-                        setMacAdress={setMacAddress}
+                    <FilterHistoricos
                         sensor={sensor}
                         setSensor={setSensor}
-                        status={status}
-                        setStatus={setStatus}
-                    /> */}
+                        ambiente={ambiente}
+                        setAmbiente={setAmbiente}
+                        timestamp={timestamp}
+                        setTimestemp={setTimestamp}
+                        data={data}
+                        setData={setData}
+                    />
 
                     {/* Área de cadastro e exportar, div usada para alinhar elementos */}
                     <div className="min-w-[14%] gap-[2rem] w-fit flex items-center justify-between">
@@ -103,7 +105,7 @@ export function Historicos() {
                         />
 
                         < BotaoExportar
-                            urlExportar={`http://127.0.0.1:8000/api/exportar/sensores/?mac_adress=${macAddress}&sensor=${sensor}&status=${status}`}
+                            urlExportar={`http://127.0.0.1:8000/api/exportar/historicos/?timestamp=${timestamp}&id_ambiente=${ambiente}&id_sensor=${sensor}`}
                             nomePlanilha={"historicos"}
                             tituloBotao={"historicos"}
                         />
@@ -123,7 +125,7 @@ export function Historicos() {
                         modalOpen={modalOpen}
                         setModalOpen={setModalOpen}
                         setSelectedHistorico={setSelectedHistorico}
-                        setData={setData} 
+                        setData={setData}
                         setArrow={setArrow}
                         arrow={arrow}
                     />
@@ -144,7 +146,7 @@ export function Historicos() {
             <ModalHistoricos
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
-                selectedHistoric={selectedHistorico}
+                selectedHistorico={selectedHistorico}
                 arrow={arrow}
                 setArrow={setArrow}
             />

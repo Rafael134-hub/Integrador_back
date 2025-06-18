@@ -196,16 +196,27 @@ export function ModalSensores({
                     />
 
                     <label htmlFor="status"
-                        className="mt-[1rem]">
-                        Informe o status
+                        className="mt-[2rem]">
+                        Informe o Status
                     </label>
-                    <input
+
+                    <select
                         name="status"
-                        className="border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
                         value={status}
-                        placeholder="Status do sensor"
                         onChange={(e) => setStatus(e.target.value)}
-                    />
+                        className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+                        <option
+                            className="bg-[#298287] text-white"
+                            value={true}>
+                            Ativo
+                        </option>
+
+                        <option
+                            className="bg-[#298287] text-white"
+                            value={false}>
+                            Inativo
+                        </option>
+                    </select>
 
                 </fieldset>
 

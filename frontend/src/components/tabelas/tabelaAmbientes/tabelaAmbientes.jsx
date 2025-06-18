@@ -17,7 +17,6 @@ export function TabelaAmbientes({ data, setSelectedAmbiente, setModalOpen, setDa
                         }
                     }
                 )
-                setData(data.filter((ambiente) => { ambiente.id !== id }));
                 setArrow(!arrow);
             } catch (error) {
                 console.error(error);
@@ -49,7 +48,7 @@ export function TabelaAmbientes({ data, setSelectedAmbiente, setModalOpen, setDa
                 {data.map((ambiente) => (
                     <tr
                         key={ambiente.id}
-                        className="text-center border-none cursor-pointer hover:bg-[#99FFE1]">
+                        className="text-center border-none cursor-pointer hover:bg-[#298287] hover:text-white">
 
                         <td
                             className="p-5 border-white"
@@ -80,8 +79,8 @@ export function TabelaAmbientes({ data, setSelectedAmbiente, setModalOpen, setDa
 
                             <div
                                 className="flex items-center justify-between text-2xl w-[90%]">
-                                <MdEdit className="cursor-pointer duration-100 ease-in hover:scale-125 hover:text-emerald-800" onClick={() => update_ambiente(ambiente)} />
-                                <IoTrashBinSharp className="cursor-pointer duration-100 ease-in hover:scale-125 hover:text-red-700" onClick={() => delete_ambiente(ambiente.id)} />
+                                <MdEdit className="cursor-pointer duration-100 ease-in hover:scale-125" onClick={() => update_ambiente(ambiente)} />
+                                <IoTrashBinSharp className="cursor-pointer duration-100 ease-in hover:scale-125" onClick={() => delete_ambiente(ambiente.id)} />
                             </div>
 
                         </td>
