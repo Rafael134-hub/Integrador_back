@@ -14,7 +14,7 @@ class Card {
 export function Home() {
 
     // Pega o nome do usuário do localStorage
-    const username = localStorage.getItem("username");
+    const username = localStorage.getItem("usuario");
 
     // Lista dos elementos de cada card de funcionalidade
     const elementosCard = [

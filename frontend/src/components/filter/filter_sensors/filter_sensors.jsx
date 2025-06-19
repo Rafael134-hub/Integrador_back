@@ -54,10 +54,10 @@ export function FilterSensores({
 
                     <form
                         className="bg-[#298287] w-fit absolute mt-[35.5rem] ml-[1rem] p-[1.5rem] pr-[2rem] pl-[2rem] rounded-2xl">
-                        <fieldset 
-                        className="flex flex-col text-left text-white">
+                        <fieldset
+                            className="flex flex-col text-left text-white">
                             <legend
-                            className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Sensores</legend>
+                                className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Sensores</legend>
 
                             <label htmlFor="macAdress">
                                 Informe o Mac Address
@@ -71,61 +71,61 @@ export function FilterSensores({
                                 className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]">
                             </input>
 
-                             <label htmlFor="status"
-                             className="mt-[2rem]">
+                            <label htmlFor="status"
+                                className="mt-[2rem]">
                                 Informe o Status
                             </label>
 
                             <select
-                            name="status"
-                            value={status}
-                            onChange={(e) => setStatus(e.target.value)}
-                            className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+                                name="status"
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
                                 <option
-                                className="bg-[#298287] text-white"
-                                value={true}>
+                                    className="bg-[#298287] text-white"
+                                    value={true}>
                                     Ativo
                                 </option>
 
                                 <option
-                                className="bg-[#298287] text-white"
-                                value={false}>
+                                    className="bg-[#298287] text-white"
+                                    value={false}>
                                     Inativo
                                 </option>
                             </select>
 
 
                             <label htmlFor="sensor"
-                             className="mt-[2rem]">
+                                className="mt-[2rem]">
                                 Informe o Tipo de sensor
                             </label>
 
                             <select
-                            name="sensor"
-                            value={sensor}
-                            onChange={(e) => setSensor(e.target.value)}
-                            className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+                                name="sensor"
+                                value={sensor}
+                                onChange={(e) => setSensor(e.target.value)}
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
                                 <option
-                                className="bg-[#298287] text-white"
-                                value={"temperatura"}>
+                                    className="bg-[#298287] text-white"
+                                    value={"temperatura"}>
                                     Temperatura
                                 </option>
 
                                 <option
-                                className="bg-[#298287] text-white"
-                                value={"umidade"}>
+                                    className="bg-[#298287] text-white"
+                                    value={"umidade"}>
                                     Umidade
                                 </option>
 
                                 <option
-                                className="bg-[#298287] text-white"
-                                value={"luminosidade"}>
+                                    className="bg-[#298287] text-white"
+                                    value={"luminosidade"}>
                                     Luminosidade
                                 </option>
 
                                 <option
-                                className="bg-[#298287] text-white"
-                                value={"contador"}>
+                                    className="bg-[#298287] text-white"
+                                    value={"contador"}>
                                     Contador
                                 </option>
                             </select>
@@ -136,16 +136,16 @@ export function FilterSensores({
                             <button>
                                 <RiResetLeftLine
                                     className="text-4xl cursor-pointer"
-                                    onClick={cleanFilter}/>
+                                    onClick={cleanFilter} />
                             </button>
 
                             <button>
                                 <IoIosCloseCircle
                                     className="text-4xl cursor-pointer"
-                                    onClick={() => setOpenFilter(false)}/>
+                                    onClick={() => setOpenFilter(false)} />
                             </button>
                         </div>
-                        
+
                     </form>
 
                     :

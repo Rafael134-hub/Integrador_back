@@ -4,7 +4,7 @@ import { FaUser } from "react-icons/fa6";
 export function Header() {
 
     // Pega o nome do usuário salvo no localStorage
-    const username = localStorage.getItem("username");
+    const username = localStorage.getItem("usuario");
 
     const [dataAtual, setDataAtual] = useState(new Date());
 

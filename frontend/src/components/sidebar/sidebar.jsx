@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import orbisense from "../../assets/images/logoOrbisense.png";
 import { MdHistory, MdHomeFilled, MdPlace, MdOutlineSensors } from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
+import { FaFileImport } from "react-icons/fa";
 import { BiSolidMapAlt } from "react-icons/bi";
 
 class ElementoNavegacao {
@@ -31,7 +32,8 @@ export function Sidebar({ selectedPage }) {
         new ElementoNavegacao("Sensores", "/sensores", MdOutlineSensors),
         new ElementoNavegacao("Ambientes", "/ambientes", MdPlace),
         new ElementoNavegacao("Histórico", "/historicos", MdHistory),
-        new ElementoNavegacao("Mapa", "/mapa", BiSolidMapAlt)
+        new ElementoNavegacao("Mapa", "/mapa", BiSolidMapAlt),
+        new ElementoNavegacao("Importar", "/importar", FaFileImport)
     ];
 
     return (
