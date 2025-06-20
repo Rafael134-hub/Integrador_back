@@ -26,7 +26,12 @@ export function Mapa() {
 
             {/* Área do mapa do Senai*/}
             <section className="flex items-center justify-center w-full mt-[4rem] mb-[8rem]">
-                   <MapaSenai />             
+
+                <div
+                    className="w-[80%] h-[40rem] bg-[#99FFE1] shadow-[0_20px_24px_0_rgba(255,255,255,0.25)] flex items-center justify-center rounded-2xl">
+                    <MapaSenai />
+                </div>
+
             </section>
 
 
@@ -34,4 +39,4 @@ export function Mapa() {
 
     )
 
-}
+};

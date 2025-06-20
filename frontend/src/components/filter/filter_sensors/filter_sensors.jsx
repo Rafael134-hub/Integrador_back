@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { RiResetLeftLine } from "react-icons/ri";
 import { FaFilter } from "react-icons/fa";
-import axios from "axios";
 
 export function FilterSensores({
     macAdress,
@@ -27,7 +26,7 @@ export function FilterSensores({
         <>
             <button
                 className="h-[4rem] w-fit pl-[1rem] pr-[1rem] rounded-xl bg-[#99FFE1] cursor-pointer transition-all duration-300 ease-in-out "
-                // Ativa o evento de exportação        
+
                 // Define os estados para abir ou fechar o botão
                 onClick={openFilter ? () => setOpenFilter(false) : () => setOpenFilter(true)}
                 onMouseEnter={() => setOpenButton(true)}
@@ -50,26 +49,31 @@ export function FilterSensores({
             </button>
 
             {
+                // Verifica se o filtro está aberto
                 openFilter ?
 
                     <form
                         className="bg-[#298287] w-fit absolute mt-[35.5rem] ml-[1rem] p-[1.5rem] pr-[2rem] pl-[2rem] rounded-2xl">
+
+                        {/* Área dos inputs/ campos */}
                         <fieldset
                             className="flex flex-col text-left text-white">
+
                             <legend
-                                className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Sensores</legend>
+                                className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Sensores
+                            </legend>
 
                             <label htmlFor="macAdress">
                                 Informe o Mac Address
                             </label>
                             <input
-                                name="macAdress"
+                                id="macAdress"
                                 type="text"
                                 value={macAdress}
                                 onChange={(e) => setMacAdress(e.target.value)}
                                 placeholder="MAC Address"
-                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]">
-                            </input>
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]"
+                            />
 
                             <label htmlFor="status"
                                 className="mt-[2rem]">
@@ -77,7 +81,7 @@ export function FilterSensores({
                             </label>
 
                             <select
-                                name="status"
+                                id="status"
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
                                 className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
@@ -94,14 +98,13 @@ export function FilterSensores({
                                 </option>
                             </select>
 
-
                             <label htmlFor="sensor"
                                 className="mt-[2rem]">
                                 Informe o Tipo de sensor
                             </label>
 
                             <select
-                                name="sensor"
+                                id="sensor"
                                 value={sensor}
                                 onChange={(e) => setSensor(e.target.value)}
                                 className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
@@ -132,6 +135,7 @@ export function FilterSensores({
 
                         </fieldset>
 
+                        {/* Área com os botões de fechar filtro e limpar filtros */}
                         <div className="flex items-center justify-between mt-[2.5rem]">
                             <button>
                                 <RiResetLeftLine
@@ -157,4 +161,4 @@ export function FilterSensores({
         </>
 
     )
-}
+};

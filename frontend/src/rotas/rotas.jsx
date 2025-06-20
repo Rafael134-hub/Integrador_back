@@ -24,7 +24,7 @@ export function Rotas() {
                 <Route path="historicos" element={<Historicos />} />
                 <Route path="mapa" element={<Mapa />} />
             </Route>
-            
+
         </Routes>
     );
 };

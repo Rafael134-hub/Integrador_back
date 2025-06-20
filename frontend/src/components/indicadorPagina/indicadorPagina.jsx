@@ -55,4 +55,4 @@ export function IndicadorPagina({ paginaAtual, setPaginaAtual, totalPaginas }) {
 
         </nav>
     );
-}
+};

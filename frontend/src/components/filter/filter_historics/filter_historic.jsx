@@ -28,6 +28,7 @@ export function FilterHistoricos({
         if (!token) return;
         console.log("Data: ", data);
 
+        // Pega os sensores
         const fetchSensores = async () => {
 
             try {
@@ -46,6 +47,7 @@ export function FilterHistoricos({
             }
         };
 
+        // Pega os ambientes
         const fetchAmbientes = async () => {
 
             try {
@@ -68,6 +70,7 @@ export function FilterHistoricos({
         fetchAmbientes();
     }, []);
 
+
     const cleanFilter = () => {
         setAmbiente("");
         setSensor("");
@@ -77,9 +80,9 @@ export function FilterHistoricos({
     return (
 
         <>
+            {/* Botão que ao ser clicado abre o filtro */}
             <button
                 className="h-[4rem] w-fit pl-[1rem] pr-[1rem] rounded-xl bg-[#99FFE1] cursor-pointer transition-all duration-300 ease-in-out "
-                // Ativa o evento de exportação        
                 // Define os estados para abir ou fechar o botão
                 onClick={openFilter ? () => setOpenFilter(false) : () => setOpenFilter(true)}
                 onMouseEnter={() => setOpenButton(true)}
@@ -102,27 +105,31 @@ export function FilterHistoricos({
             </button>
 
             {
+                // Verifica se o filtro está aberto
                 openFilter ?
 
                     <form
                         className="bg-[#298287] w-fit absolute mt-[35.5rem] ml-[1rem] p-[1.5rem] pr-[2rem] pl-[2rem] rounded-2xl">
+
+                        {/* Área dos inputs/ campos */}
                         <fieldset
                             className="flex flex-col text-left text-white">
+
                             <legend
-                                className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Históricos</legend>
+                                className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Históricos
+                            </legend>
 
                             <label htmlFor="timestamp">
                                 Informe a data e hora
                             </label>
                             <input
-                                name="timestamp"
+                                id="timestamp"
                                 type="datetime-local"
                                 value={timestamp}
                                 onChange={(e) => setTimestemp(e.target.value)}
                                 placeholder="Data e hora"
-                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]">
-                            </input>
-
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]"
+                            />
 
                             <label htmlFor="sensor"
                                 className="mt-[2rem]">
@@ -130,10 +137,11 @@ export function FilterHistoricos({
                             </label>
 
                             <select
-                                name="sensor"
+                                id="sensor"
                                 value={sensor}
                                 onChange={(e) => setSensor(e.target.value)}
                                 className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+                                {/* Itera sobre cada sensor para inserir as opções */}
                                 {
                                     sensores.map((sensor, index) => (
                                         <option
@@ -145,17 +153,18 @@ export function FilterHistoricos({
                                     ))}
                             </select>
 
-
                             <label htmlFor="ambiente"
                                 className="mt-[2rem]">
                                 Informe o ambiente selecionado
                             </label>
 
                             <select
-                                name="ambiente"
+                                id="ambiente"
                                 value={ambiente}
                                 onChange={(e) => setAmbiente(e.target.value)}
                                 className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
+
+                                {/* Itera sobre cada ambiente para inserir as opções */}
                                 {
                                     ambientes.map((ambiente, index) => (
                                         <option
@@ -169,6 +178,7 @@ export function FilterHistoricos({
 
                         </fieldset>
 
+                        {/* Área com os botões de fechar filtro e limpar filtros */}
                         <div className="flex items-center justify-between mt-[2.5rem]">
                             <button>
                                 <RiResetLeftLine
@@ -187,6 +197,7 @@ export function FilterHistoricos({
 
                     :
 
+                    // Formulário sem nada caso o filtro esteja fechado
                     <form>
                     </form>
             }
@@ -194,4 +205,4 @@ export function FilterHistoricos({
         </>
 
     )
-}
+};

@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 export function MapaSenai() {
 
     return (
-        <div className="h-[40rem] w-[80%] rounded-2xl overflow-hidden shadow-[0_20px_24px_0_rgba(255,255,255,0.25)]">
+        <div className="h-[93%] w-[96%] rounded-2xl overflow-hidden">
             <MapContainer
                 center={[-22.914444, -47.068194]}
                 zoom={16}

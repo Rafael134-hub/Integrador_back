@@ -1,25 +1,45 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import logoOrbisense from "../../assets/images/logoOrbisense.png"
 import logoOrbisenseWhite from "../../assets/images/logoOrbisenseWhite.png"
 
 export function Login() {
-    const [usuario, setUsuario] = useState('');
-    const [senha, setSenha] = useState('');
-    const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = async () => {
+    // Schema feito com o zod para tratativa de erros
+    const loginSchema = z.object({
+        usuario: z.string()
+            .min(1, "O nome de usuário é obrigatório")
+            .max(150, "O nome de usuário deve ter no máximo 150 caracteres"),
+        senha: z.string()
+            .min(1, "A senha é obrigatória")
+            .max(128, "A senha deve ter no máximo 128 caracteres")
+    });
+
+    // Declaração do useForma para lidar com o submit
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setError,
+        clearErrors,
+    } = useForm({
+        resolver: zodResolver(loginSchema)
+    });
+
+    // Função para realizar Login
+    const onSubmit = async (data) => {
 
         try {
             const response = await axios.post(
                 'http://127.0.0.1:8000/api/token/',
 
                 {
-                    username: usuario,
-                    password: senha
+                    username: data.usuario,
+                    password: data.senha
                 }
 
             );
@@ -27,14 +47,12 @@ export function Login() {
             // Se sucesso do Login, armazena o token e o nome do usuário, além de levar à página home
             console.log("Token Login: ", response.data.access);
             localStorage.setItem('token', response.data.access);
-            localStorage.setItem('usuario', usuario);
+            localStorage.setItem('usuario', data.usuario);
             console.log("Token: ", localStorage.getItem("token"));
             navigate('/home');
 
         } catch (error) {
-            console.error(error);
-            setError("*Credenciais inválidas.")
-
+            setError("root", { message: "*Credenciais inválidas." });
         }
     }
 
@@ -46,7 +64,9 @@ export function Login() {
                 className="h-screen bg-black flex items-center justify-center">
 
                 {/* Formulário de login */}
-                <form className="bg-white w-[56rem] h-[36rem] flex items-center justify-center text-black shadow-[0_20px_24px_0_rgba(255,255,255,0.25)]">
+                <form
+                    className="bg-white w-[56rem] h-[36rem] flex items-center justify-center text-black shadow-[0_20px_24px_0_rgba(255,255,255,0.25)]"
+                    onSubmit={handleSubmit(onSubmit)}>
 
                     {/* Área esquerda do formulário com os inputs */}
                     <div
@@ -62,7 +82,13 @@ export function Login() {
                             Bem vindo(a) de volta!
                         </h1>
 
-                        <p className="text-red-500 mt-[2vh] h-[2vh]">{error}</p>
+                        {errors.root && (
+                            <p
+                                className="text-red-500 mt-[2vh] h-[2vh]"
+                                role="alert">
+                                {errors.root.message}
+                            </p>
+                        )}
 
                         <fieldset
                             className="flex flex-col">
@@ -72,13 +98,21 @@ export function Login() {
                                 Informe o seu nome de usuário
                             </label>
                             <input
-                                name="usuario"
+                                id="usuario"
                                 placeholder="Usuário"
                                 className="text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]"
                                 type="text"
-                                value={usuario}
-                                required
-                                onChange={(e) => { setUsuario(e.target.value) }} />
+                                {...register("usuario")}
+                                onFocus={() => clearErrors("root")}
+                                maxLength={150}
+                            />
+                            {errors.usuario && (
+                                <p
+                                    className="text-red-500 text-sm mt-1"
+                                    role="alert">
+                                    {errors.usuario.message}
+                                </p>
+                            )}
 
                             <label
                                 htmlFor="senha"
@@ -86,19 +120,29 @@ export function Login() {
                                 Informe sua senha
                             </label>
                             <input
-                                name="senha"
+                                id="senha"
                                 placeholder="Senha"
                                 className="text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]"
                                 type="password"
-                                required
-                                value={senha}
-                                onChange={(e) => { setSenha(e.target.value) }} />
+                                {...register("senha")}
+                                maxLength={128}
+                                onFocus={() => clearErrors("root")}
+                                onCopy={(e) => e.preventDefault()}
+                                onCut={(e) => e.preventDefault()}
+                            />
+                            {errors.senha && (
+                                <p
+                                    className="text-red-500 text-sm mt-1"
+                                    role="alert">
+                                    {errors.senha.message}
+                                </p>
+                            )}
 
                         </fieldset>
 
                         <button
                             className="mt-[5rem] bg-[#298287] text-white rounded-[12px] w-[18rem] h-[2.5rem] text-center duration-200 easy-in-out hover:scale-110 cursor-pointer"
-                            onClick={(e) => { e.preventDefault(); handleLogin(); }}>
+                            type="submit">
                             Entrar
                         </button>
 
@@ -110,7 +154,8 @@ export function Login() {
                         <img
                             className="max-h-[100%] w-[9rem]"
                             src={logoOrbisense}
-                            alt="Logo da orbisense" />
+                            alt="Logo da orbisense"
+                        />
 
 
                         <div
@@ -150,4 +195,4 @@ export function Login() {
 
 
     )
-}
+};

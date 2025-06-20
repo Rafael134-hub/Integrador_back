@@ -8,7 +8,7 @@ export function TabelaSensores({ data, setSelectedSensor, setModalOpen, setData,
     const token = localStorage.getItem("token");
 
     const delete_sensor = async (id) => {
-        if (window.confirm("Are u sure?")) {
+        if (window.confirm("Você tem certeza que deseja deletar o registro?")) {
             try {
                 await axios.delete(`http://127.0.0.1:8000/api/sensor/${id}/`,
                     {
@@ -45,10 +45,13 @@ export function TabelaSensores({ data, setSelectedSensor, setModalOpen, setData,
                 </tr>
 
             </thead>
-            <tbody 
-            className="text-[16px]">
+            <tbody
+                className="text-[16px]">
                 {data.map((sensor) => (
+
+                    // Linha da tabela com os dados do registro do map
                     <tr
+                        tabIndex={0}
                         key={sensor.id}
                         className="text-center border-none cursor-pointer hover:bg-[#298287] hover:text-white">
 
@@ -91,10 +94,23 @@ export function TabelaSensores({ data, setSelectedSensor, setModalOpen, setData,
                         <td
                             className="p-6 border-none flex items-center justify-center">
 
+                            {/* Área com os botões de deletar e editar */}
                             <div
                                 className="flex items-center justify-between text-2xl w-[90%]">
-                                <MdEdit className="cursor-pointer duration-100 ease-in hover:scale-125" onClick={() => update_sensor(sensor)} />
-                                <IoTrashBinSharp className="cursor-pointer duration-100 ease-in hover:scale-125" onClick={() => delete_sensor(sensor.id)} />
+
+                                <button
+                                    type="button"
+                                    onClick={() => update_sensor(sensor)}>
+                                    <MdEdit
+                                        className="cursor-pointer duration-100 ease-in hover:scale-125" />
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => delete_sensor(sensor.id)}>
+                                    <IoTrashBinSharp
+                                        className="cursor-pointer duration-100 ease-in hover:scale-125" />
+                                </button>
                             </div>
 
                         </td>
@@ -103,4 +119,4 @@ export function TabelaSensores({ data, setSelectedSensor, setModalOpen, setData,
             </tbody>
         </table>
     )
-}
+};

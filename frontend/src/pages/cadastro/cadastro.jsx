@@ -1,28 +1,59 @@
-import { useState } from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import logoOrbisense from "../../assets/images/logoOrbisense.png"
 import logoOrbisenseWhite from "../../assets/images/logoOrbisenseWhite.png"
 
 export function Cadastro() {
-    const [usuario, setUsuario] = useState('');
-    const [senha, setSenha] = useState('');
-    const [confirmaSenha, setConfirmaSenha] = useState('');
-    const [email, setEmail] = useState('');
-    const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleCadastro = async () => {
+    // Schema feito com o zod para tratativa de erros
+    const cadastroSchema = z.object({
+        usuario: z.string()
+            .min(1, "O nome de usuário é obrigatório")
+            .max(150, "O nome de usuário deve ter no máximo 150 caracteres"),
+
+        email: z.string()
+            .min(1, "O e-mail é obrigatório")
+            .max(254, "O e-mail deve ter no máximo 150 caracteres")
+            .email("Digite um e-mail válido"),
+
+        senha: z.string()
+            .min(1, "A senha é obrigatória")
+            .max(128, "A senha deve ter no máximo 128 caracteres"),
+
+        confirmarSenha: z.string()
+            .min(1, "A confirmação de senha é obrigatória")
+            .max(128, "A confirmação de senha deve ter no máximo 128 caracteres")
+    }).refine((data) => data.senha === data.confirmarSenha, {
+        path: ["confirmarSenha"],
+        message: "As senhas devem ser iguais",
+    });
+
+    // Declaração do useForma para lidar com o submit
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setError,
+        clearErrors,
+    } = useForm({
+        resolver: zodResolver(cadastroSchema)
+    });
+
+    // Função que realiza o cadastro
+    const onSubmit = async (data) => {
 
         try {
             const response = await axios.post(
                 'http://127.0.0.1:8000/api/signup/',
 
                 {
-                    username: usuario,
-                    password: senha,
-                    email: email
+                    username: data.usuario,
+                    password: data.senha,
+                    email: data.email
                 }
 
             );
@@ -32,7 +63,9 @@ export function Cadastro() {
 
         } catch (error) {
             console.error(error);
-            setError("*Credenciais inválidas.")
+            setError("root", {
+                message: "*Erro ao cadastrar. Tente novamente.",
+            });
 
         }
     }
@@ -45,7 +78,9 @@ export function Cadastro() {
                 className="h-screen bg-black flex items-center justify-center">
 
                 {/* Formulário de login */}
-                <form className="bg-white w-[56rem] h-[36rem] flex items-center justify-center text-black shadow-[0_20px_24px_0_rgba(255,255,255,0.25)]">
+                <form
+                    className="bg-white w-[56rem] h-[36rem] flex items-center justify-center text-black shadow-[0_20px_24px_0_rgba(255,255,255,0.25)]"
+                    onSubmit={handleSubmit(onSubmit)}>
 
 
                     {/* Área direita, com a logo a empresa e opção secundária para realizar cadastro */}
@@ -54,7 +89,8 @@ export function Cadastro() {
                         <img
                             className="max-h-[100%] w-[9rem]"
                             src={logoOrbisense}
-                            alt="Logo da orbisense" />
+                            alt="Logo da orbisense"
+                        />
 
 
                         <div
@@ -100,7 +136,13 @@ export function Cadastro() {
                             Cadastre-se!
                         </h1>
 
-                        <p className="text-red-500 mt-[1vh] h-[2vh]">{error}</p>
+                        {errors.root && (
+                            <p
+                                className="text-red-500 mt-[2vh] h-[2vh]"
+                                role="alert">
+                                {errors.root.message}
+                            </p>
+                        )}
 
                         <fieldset
                             className="flex flex-col">
@@ -110,27 +152,43 @@ export function Cadastro() {
                                 Crie seu nome de usuário
                             </label>
                             <input
-                                name="usuario"
+                                id="usuario"
                                 placeholder="Usuário"
                                 className="text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]"
                                 type="text"
-                                value={usuario}
-                                required
-                                onChange={(e) => { setUsuario(e.target.value) }} />
+                                {...register("usuario")}
+                                onFocus={() => clearErrors("root")}
+                                maxLength={150}
+                            />
+                            {errors.usuario && (
+                                <p
+                                    className="text-red-500 text-sm mt-1"
+                                    role="alert">
+                                    {errors.usuario.message}
+                                </p>
+                            )}
 
                             <label
-                                htmlFor="senha"
+                                htmlFor="email"
                                 className="mt-[0.5rem]">
                                 Informe seu e-mail
                             </label>
                             <input
-                                name="senha"
+                                id="email"
                                 placeholder="E-mail"
                                 className="text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]"
                                 type="email"
-                                value={email}
-                                required
-                                onChange={(e) => { setEmail(e.target.value) }} />
+                                {...register("email")}
+                                onFocus={() => clearErrors("root")}
+                                maxLength={254}
+                            />
+                            {errors.email && (
+                                <p
+                                    className="text-red-500 text-sm mt-1"
+                                    role="alert">
+                                    {errors.email.message}
+                                </p>
+                            )}
 
                             <label
                                 htmlFor="senha"
@@ -138,34 +196,50 @@ export function Cadastro() {
                                 Crie sua senha
                             </label>
                             <input
-                                name="senha"
+                                id="senha"
                                 placeholder="Senha"
                                 className="text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]"
                                 type="password"
-                                value={senha}
-                                required
-                                onChange={(e) => { setSenha(e.target.value) }} />
+                                {...register("senha")}
+                                onFocus={() => clearErrors("root")}
+                                maxLength={128}
+                            />
+                            {errors.senha && (
+                                <p
+                                    className="text-red-500 text-sm mt-1"
+                                    role="alert">
+                                    {errors.senha.message}
+                                </p>
+                            )}
 
                             <label
-                                htmlFor="senha"
+                                htmlFor="confirmarSenha"
                                 className="mt-[1rem]">
                                 Confirme sua senha
                             </label>
                             <input
-                                name="senha"
+                                id="confirmarSenha"
                                 placeholder="Confirme a senha"
                                 className="text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]"
                                 type="password"
-                                value={confirmaSenha}
-                                required
-                                onChange={(e) => { setConfirmaSenha(e.target.value) }} />
+                                {...register("confirmarSenha")}
+                                onFocus={() => clearErrors("root")}
+                                maxLength={128}
+                            />
+                            {errors.confirmarSenha && (
+                                <p
+                                    className="text-red-500 text-sm mt-1"
+                                    role="alert">
+                                    {errors.confirmarSenha.message}
+                                </p>
+                            )}
 
                         </fieldset>
 
                         <button
                             className="mt-[2rem] bg-[#298287] text-white rounded-[12px] w-[18rem] h-[2.5rem] text-center duration-200 easy-in-out hover:scale-110 cursor-pointer"
-                            onClick={(e) => { e.preventDefault(); handleCadastro(); }}>
-                            Entrar
+                            type="submit">
+                            Cadastrar-se
                         </button>
 
                     </div>
@@ -178,4 +252,4 @@ export function Cadastro() {
 
 
     )
-}
+};

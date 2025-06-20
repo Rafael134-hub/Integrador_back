@@ -58,4 +58,4 @@ export function BotaoExportar({ urlExportar, nomePlanilha, tituloBotao }) {
         </button>
 
     )
-}
+};

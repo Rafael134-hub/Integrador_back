@@ -52,8 +52,8 @@ export function Sidebar({ selectedPage }) {
                         <img
                             className="p-[1rem] mb-[5vh] max-h-full w-[6.5rem] self-center"
                             src={orbisense}
-                            alt="Logo da empresa">
-                        </img>
+                            alt="Logo da orbisense"
+                        />
 
                         {/* Área de navegação e de opção de sair, div usada para alinhar elementos */}
                         <div className="flex flex-col items-center justify-between w-full flex-grow">
@@ -170,4 +170,4 @@ export function Sidebar({ selectedPage }) {
         </>
     )
 
-}
+};

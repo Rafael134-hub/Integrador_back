@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { IoIosCloseCircle } from "react-icons/io";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export function ModalHistoricos({
     isOpen,
@@ -11,20 +14,10 @@ export function ModalHistoricos({
 }) {
     if (!isOpen) return null
 
-    const [id, setId] = useState(selectedHistorico?.id ?? '');
-    const [idSensor, setIdSensor] = useState(selectedHistorico?.id_sensor ?? '');
-    const [idAmbiente, setIdAmbiente] = useState(selectedHistorico?.id_ambiente ?? '');
-    const [valor, setValor] = useState(selectedHistorico?.valor ?? '');
-    const [timestamp, setTimestamp] = useState(selectedHistorico?.timestamp ?? '');
     const [sensores, setSensores] = useState([]);
     const [ambientes, setAmbientes] = useState([]);
 
     const token = localStorage.getItem('token')
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-
-    }
 
 
     useEffect(() => {
@@ -71,17 +64,65 @@ export function ModalHistoricos({
         fetchAmbientes();
     }, []);
 
+    const timestamp = z.string()
+        .min(1, "O timestamp é obrigatório")
+        .max(255, "O timestamp deve ter no máximo 255 caracteres")
+        .refine(val => !isNaN(Date.parse(val)), {
+            message: "O timestamp deve estar em formato ISO 8601 válido",
+        })
+        .transform(val => new Date(val));
 
-    const newHistorico = async () => {
+    // Schema feito com o zod para tratativa de erros
+    const modalAmbienteSchema = z.object({
+        sensor: z
+            .number({ invalid_type_error: "O ID do sensor selecionado deve ser um número" })
+            .int("O ID do sensor selecionado deve ser um número inteiro")
+            .min(-2147483648, "O valor mínimo do ID do sensor permitido é -2.147.483.648")
+            .max(2147483647, "Valor máximo do ID do sensor permitido é 2.147.483.647"),
+
+        ambiente: z
+            .number({ invalid_type_error: "O ID do ambiente selecionado deve ser um número" })
+            .int("O ID do ambiente selecionado deve ser um número inteiro")
+            .min(-2147483648, "O valor mínimo do ID do ambiente permitido é -2.147.483.648")
+            .max(2147483647, "Valor máximo do ID do ambiente permitido é 2.147.483.647"),
+
+        valor: z
+            .number({ invalid_type_error: "O valor deve ser um número" })
+            .min(-2147483648, "O valor mínimo permitido é -2.147.483.648")
+            .max(2147483647, "Valor máximo é 2.147.483.647"),
+
+        timestamp: timestamp
+    });
+
+    // Declaração do useForma para lidar com o submit
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = useForm({
+        resolver: zodResolver(modalAmbienteSchema),
+        defaultValues: {
+            sensor: selectedHistorico?.sensor?.id ?? undefined,
+            ambiente: selectedHistorico?.ambiente?.id ?? undefined,
+            valor: selectedHistorico?.valor ?? undefined,
+            timestamp: selectedHistorico?.timestamp
+                ? formatarParaInput(selectedHistorico.timestamp)
+                : ""
+        },
+    });
+
+
+    const newHistorico = async (data) => {
 
         try {
             await axios.post('http://127.0.0.1:8000/api/historicos/',
 
                 {
-                    id_sensor: idSensor,
-                    id_ambiente: idAmbiente,
-                    valor: valor,
-                    timestamp: timestamp
+                    id_sensor: data.sensor,
+                    id_ambiente: data.ambiente,
+                    valor: data.valor,
+                    timestamp: data.timestamp
 
                 }, {
                 headers: {
@@ -100,15 +141,15 @@ export function ModalHistoricos({
     };
 
 
-    const editHistorico = async () => {
+    const editHistorico = async (data) => {
         try {
 
             await axios.put(`http://127.0.0.1:8000/api/historico/${selectedHistorico.id}/`,
                 {
-                    id_sensor: idSensor,
-                    id_ambiente: idAmbiente,
-                    valor: valor,
-                    timestamp: timestamp
+                    id_sensor: data.sensor,
+                    id_ambiente: data.ambiente,
+                    valor: data.valor,
+                    timestamp: data.timestamp
                 },
                 {
                     headers: {
@@ -128,23 +169,22 @@ export function ModalHistoricos({
     function formatarParaInput(datetimeString) {
         const date = new Date(datetimeString);
         const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-        return local.toISOString().slice(0, 16);
-    };
+        return local.toISOString().slice(0, 16); // "yyyy-MM-ddTHH:mm"
+    }
 
-    const tituloData = new Date(timestamp);
 
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[6px] bg-black/75">
 
             <form
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmit(selectedHistorico ? editHistorico : newHistorico)}
                 className="z-60 bg-white w-[32rem] rounded-[36px] shadow-lg pt-[2rem] flex flex-col items-center justify-center">
 
                 {/* Título do formulário */}
                 <span
                     className="font-bold text-[26px] mb-[1rem] place-self-center self-center">
-                    {selectedHistorico ? `Editar ${tituloData.toLocaleString('pt-BR').replace(",", "")}` : "Cadastrar novo histórico!"}
+                    {selectedHistorico ? "Editar Histórico!" : "Cadastrar novo histórico!"}
                 </span>
 
                 {/* Área dos inputs */}
@@ -156,12 +196,18 @@ export function ModalHistoricos({
                     <input
                         name="timestamp"
                         type="datetime-local"
-                        value={timestamp ? formatarParaInput(timestamp) : ""}
-                        onChange={(e) => setTimestamp(e.target.value)}
+                        {...register("timestamp")}
+                        onFocus={() => clearErrors("root")}
                         placeholder="Data e hora"
-                        className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]">
-                    </input>
-
+                        className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
+                    />
+                    {errors.timestamp && (
+                        <p
+                            className="text-red-500 text-sm mt-1"
+                            role="alert">
+                            {errors.timestamp.message}
+                        </p>
+                    )}
 
                     <label htmlFor="valor"
                         className="mt-[2rem]">
@@ -170,12 +216,19 @@ export function ModalHistoricos({
                     <input
                         name="valor"
                         type="number"
-                        value={valor}
-                        onChange={(e) => setValor(e.target.value)}
+                        step="any"
+                        {...register("valor", { valueAsNumber: true })}
+                        onFocus={() => clearErrors("root")}
                         placeholder="Valor de registro"
-                        className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]">
-                    </input>
-
+                        className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
+                    />
+                    {errors.valor && (
+                        <p
+                            className="text-red-500 text-sm mt-1"
+                            role="alert">
+                            {errors.valor.message}
+                        </p>
+                    )}
 
                     <label htmlFor="sensor"
                         className="mt-[2rem]">
@@ -184,8 +237,8 @@ export function ModalHistoricos({
 
                     <select
                         name="sensor"
-                        value={idSensor}
-                        onChange={(e) => setIdSensor(e.target.value)}
+                        {...register("sensor", { valueAsNumber: true })}
+                        onFocus={() => clearErrors("root")}
                         className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
                         {
                             sensores.map((sensor, index) => (
@@ -197,7 +250,13 @@ export function ModalHistoricos({
                                 </option>
                             ))}
                     </select>
-
+                    {errors.sensor && (
+                        <p
+                            className="text-red-500 text-sm mt-1"
+                            role="alert">
+                            {errors.sensor.message}
+                        </p>
+                    )}
 
                     <label htmlFor="ambiente"
                         className="mt-[2rem]">
@@ -206,8 +265,8 @@ export function ModalHistoricos({
 
                     <select
                         name="ambiente"
-                        value={idAmbiente}
-                        onChange={(e) => setIdAmbiente(e.target.value)}
+                        {...register("ambiente", { valueAsNumber: true })}
+                        onFocus={() => clearErrors("root")}
                         className="bg-white text-black border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem] pr-[1rem] cursor-pointer">
                         {
                             ambientes.map((ambiente, index) => (
@@ -219,6 +278,13 @@ export function ModalHistoricos({
                                 </option>
                             ))}
                     </select>
+                    {errors.ambiente && (
+                        <p
+                            className="text-red-500 text-sm mt-1"
+                            role="alert">
+                            {errors.ambiente.message}
+                        </p>
+                    )}
 
                 </fieldset>
 
@@ -227,7 +293,8 @@ export function ModalHistoricos({
                     <button id="botao_envioh"
                         className="bg-black text-white p-[0.5rem] w-[25rem] h-[2.5rem] rounded-[16px] duration-200 easy-in-out hover:scale-110 text-[18px] cursor-pointer"
                         type="submit"
-                        onClick={selectedHistorico ? editHistorico : newHistorico}>Salvar
+                    >
+                        Salvar
                     </button>
                 </div>
 
@@ -245,4 +312,4 @@ export function ModalHistoricos({
             </form>
         </div>
     )
-}
+};

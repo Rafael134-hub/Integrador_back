@@ -17,4 +17,4 @@ export function BotaoAvancar({ setPaginaAtual, paginaAtual, totalPaginas }) {
             />
         </button>
     );
-}
+};

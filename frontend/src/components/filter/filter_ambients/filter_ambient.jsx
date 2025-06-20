@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { RiResetLeftLine } from "react-icons/ri";
 import { FaFilter } from "react-icons/fa";
-import axios from "axios";
 
 export function FilterAmbientes({
     sig,
@@ -22,9 +21,9 @@ export function FilterAmbientes({
     return (
 
         <>
+            {/* Botão que ao ser clicado abre o filtro */}
             <button
                 className="h-[4rem] w-fit pl-[1rem] pr-[1rem] rounded-xl bg-[#99FFE1] cursor-pointer transition-all duration-300 ease-in-out "
-                // Ativa o evento de exportação        
                 // Define os estados para abir ou fechar o botão
                 onClick={openFilter ? () => setOpenFilter(false) : () => setOpenFilter(true)}
                 onMouseEnter={() => setOpenButton(true)}
@@ -47,61 +46,67 @@ export function FilterAmbientes({
             </button>
 
             {
+                // Verifica se o filtro está aberto
                 openFilter ?
 
                     <form
                         className="bg-[#298287] w-fit absolute mt-[28.5rem] ml-[1rem] p-[1.5rem] pr-[2rem] pl-[2rem] rounded-2xl">
-                        <fieldset 
-                        className="flex flex-col text-left text-white">
+
+                        {/* Área dos inputs/ campos */}
+                        <fieldset
+                            className="flex flex-col text-left text-white">
+
                             <legend
-                            className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Sensores</legend>
+                                className="font-bold text-[20px] mb-[2rem] text-center">Filtrar Sensores
+                            </legend>
 
                             <label htmlFor="sig">
                                 Informe o SIG do ambiente
                             </label>
                             <input
-                                name="sig"
+                                id="sig"
                                 type="text"
                                 value={sig}
                                 onChange={(e) => setSig(e.target.value)}
                                 placeholder="SIG"
-                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]">
-                            </input>
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]"
+                            />
 
                             <label htmlFor="descricao"
-                            className="mt-[1rem]">
+                                className="mt-[1rem]">
                                 Informe a descrição do ambiente
                             </label>
                             <input
-                                name="descricao"
+                                id="descricao"
                                 type="text"
                                 value={descricao}
                                 onChange={(e) => setDescricao(e.target.value)}
                                 placeholder="Descrição"
-                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]">
-                            </input>
-                         
+                                className="bg-white text-black border-2 border-black rounded-[12px] w-[18rem] h-[2.5rem] pl-[1rem]"
+                            />
 
                         </fieldset>
 
+                        {/* Área com os botões de fechar filtro e limpar filtros */}
                         <div className="flex items-center justify-between mt-[2.5rem]">
                             <button>
                                 <RiResetLeftLine
                                     className="text-4xl cursor-pointer"
-                                    onClick={cleanFilter}/>
+                                    onClick={cleanFilter} />
                             </button>
 
                             <button>
                                 <IoIosCloseCircle
                                     className="text-4xl cursor-pointer"
-                                    onClick={() => setOpenFilter(false)}/>
+                                    onClick={() => setOpenFilter(false)} />
                             </button>
                         </div>
-                        
+
                     </form>
 
                     :
 
+                    // Formulário sem nada caso o filtro esteja fechado
                     <form>
                     </form>
             }
@@ -109,4 +114,4 @@ export function FilterAmbientes({
         </>
 
     )
-}
+};

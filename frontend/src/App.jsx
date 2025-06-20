@@ -6,10 +6,10 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Rotas/>
+        <Rotas />
       </BrowserRouter>
     </>
   )
 }
 
-export default App
+export default App;

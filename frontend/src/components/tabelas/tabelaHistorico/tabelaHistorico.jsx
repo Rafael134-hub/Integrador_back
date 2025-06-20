@@ -8,7 +8,7 @@ export function TabelaHistoricos({ data, setSelectedHistorico, setModalOpen, set
     const token = localStorage.getItem("token");
 
     const delete_historico = async (id) => {
-        if (window.confirm("Are u sure?")) {
+        if (window.confirm("Você tem certeza que deseja deletar o registro?")) {
             try {
                 await axios.delete(`http://127.0.0.1:8000/api/historico/${id}/`,
                     {
@@ -50,9 +50,12 @@ export function TabelaHistoricos({ data, setSelectedHistorico, setModalOpen, set
                     const dataHistorico = new Date(historico.timestamp);
 
                     return (
+
+                        // Linha da tabela com os dados do registro do map
                         <tr
+                            tabIndex={0}
                             key={historico.id}
-                            className="text-center border-none cursor-pointer hover:bg-[#298287] hover:text-white">
+                            className="text-center border-none cursor-pointer hover:bg-[#298287] focus:bg-[#298287] hover:text-white focus:text-white">
 
                             <td
                                 className="p-5 border-white"
@@ -86,14 +89,24 @@ export function TabelaHistoricos({ data, setSelectedHistorico, setModalOpen, set
                             <td
                                 className="p-6 border-none flex items-center justify-center">
 
+                                {/* Área com os botões de deletar e editar */}
                                 <div
                                     className="flex items-center justify-between text-2xl w-[90%]">
-                                    <MdEdit className="cursor-pointer duration-100 ease-in hover:scale-125" 
-                                        onClick={() => update_historico(historico)} 
-                                        onFocus={() => update_historico(historico)} />
-                                    <IoTrashBinSharp className="cursor-pointer duration-100 ease-in hover:scale-125" 
-                                    onClick={() => delete_historico(historico.id)} 
-                                    onFocus={() => delete_historico(historico.id)}/>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => update_historico(historico)}>
+                                        <MdEdit
+                                            className="cursor-pointer duration-100 ease-in hover:scale-125" />
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => delete_historico(historico.id)}>
+                                        <IoTrashBinSharp
+                                            className="cursor-pointer duration-100 ease-in hover:scale-125" />
+                                    </button>
+
                                 </div>
 
                             </td>
@@ -104,4 +117,4 @@ export function TabelaHistoricos({ data, setSelectedHistorico, setModalOpen, set
             </tbody>
         </table>
     )
-}
+};

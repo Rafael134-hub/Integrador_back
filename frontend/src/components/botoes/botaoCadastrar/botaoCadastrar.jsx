@@ -37,4 +37,4 @@ export function BotaoCadastrar({ setOpenModal, tituloBotao, setSelectedSensor })
         </button>
 
     )
-}
+};

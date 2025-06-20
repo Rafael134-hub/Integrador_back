@@ -123,7 +123,7 @@ export function Sensores() {
                         modalOpen={modalOpen}
                         setModalOpen={setModalOpen}
                         setSelectedSensor={setSelectedSensor}
-                        setData={setData} 
+                        setData={setData}
                         setArrow={setArrow}
                         arrow={arrow}
                     />
@@ -153,4 +153,4 @@ export function Sensores() {
 
     )
 
-}
+};

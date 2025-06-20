@@ -1,6 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { IoIosCloseCircle } from "react-icons/io";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export function ModalAmbientes({
     isOpen,
@@ -11,30 +14,56 @@ export function ModalAmbientes({
 }) {
     if (!isOpen) return null
 
-    const [id, setId] = useState(selectedAmbiente?.id ?? '');
-    const [sig, setSig] = useState(selectedAmbiente?.sig ?? '');
-    const [ni, setNi] = useState(selectedAmbiente?.ni ?? '');
-    const [descricao, setDescricao] = useState(selectedAmbiente?.descricao ?? '');
-    const [responsavel, setResponsavel] = useState(selectedAmbiente?.responsavel ?? '');
+    // Schema feito com o zod para tratativa de erros
+    const modalAmbienteSchema = z.object({
+        sig: z
+            .number({ invalid_type_error: "O SIG deve ser um número" })
+            .int("O SIG deve ser um número inteiro")
+            .min(-2147483648, "Valor mínimo permitido é -2.147.483.648")
+            .max(2147483647, "Valor máximo permitido é 2.147.483.647"),
+
+        descricao: z.string()
+            .min(1, "O e-mail é obrigatório")
+            .max(255, "O e-mail deve ter no máximo 255 caracteres"),
+
+        ni: z.string()
+            .min(1, "A senha é obrigatória")
+            .max(255, "A senha deve ter no máximo 255 caracteres"),
+
+        responsavel: z.string()
+            .min(1, "A confirmação de senha é obrigatória")
+            .max(255, "A confirmação de senha deve ter no máximo 255 caracteres")
+    });
+
+    // Declaração do useForma para lidar com o submit
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = useForm({
+        resolver: zodResolver(modalAmbienteSchema),
+        defaultValues: {
+            sig: selectedAmbiente?.sig ?? "",
+            descricao: selectedAmbiente?.descricao ?? "",
+            ni: selectedAmbiente?.ni ?? "",
+            responsavel: selectedAmbiente?.responsavel ?? "",
+        },
+    });
 
     const token = localStorage.getItem('token')
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-
-    }
-
-
-    const newAmbiente = async () => {
+    // Função de novo ambiente
+    const newAmbiente = async (data) => {
 
         try {
             await axios.post('http://127.0.0.1:8000/api/ambientes/',
 
                 {
-                    sig: parseInt(sig),
-                    descricao: descricao,
-                    ni: ni,
-                    responsavel: responsavel
+                    sig: data.sig,
+                    descricao: data.descricao,
+                    ni: data.ni,
+                    responsavel: data.responsavel
                 }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -51,22 +80,16 @@ export function ModalAmbientes({
         }
     };
 
-
-    const editAmbiente = async () => {
+    // Função de editar ambiente
+    const editAmbiente = async (data) => {
         try {
-            console.log("Data sent to update:", {
-                sig: sig,
-                descricao: descricao,
-                ni: ni,
-                responsavel: responsavel
-            });
 
             await axios.put(`http://127.0.0.1:8000/api/ambiente/${selectedAmbiente.id}/`,
                 {
-                    sig: sig,
-                    descricao: descricao,
-                    ni: ni,
-                    responsavel: responsavel
+                    sig: data.sig,
+                    descricao: data.descricao,
+                    ni: data.ni,
+                    responsavel: data.responsavel
                 },
                 {
                     headers: {
@@ -84,11 +107,11 @@ export function ModalAmbientes({
     };
 
     return (
-        <div
+        <section
             className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[6px] bg-black/75">
 
             <form
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmit(selectedAmbiente ? editAmbiente : newAmbiente)}
                 className="z-60 bg-white w-[32rem] rounded-[36px] shadow-lg pt-[2rem] flex flex-col items-center justify-center">
 
                 {/* Título do formulário */}
@@ -105,57 +128,87 @@ export function ModalAmbientes({
                         Informe SIG
                     </label>
                     <input
-                        name="sig"
+                        id="sig"
+                        type="number"
                         className="border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
-                        value={sig}
                         placeholder="SIG do ambiente"
-                        onChange={(e) => setSig(e.target.value)}
+                        {...register("sig", { valueAsNumber: true })}
+                        onFocus={() => clearErrors("root")}
                     />
+                    {errors.sig && (
+                        <p
+                            className="text-red-500 text-sm mt-1"
+                            role="alert">
+                            {errors.sig.message}
+                        </p>
+                    )}
+
 
                     <label htmlFor="descricao"
                         className="mt-[2rem]">
                         Informe a descrição do ambiente
                     </label>
                     <input
-                        name="descricao"
+                        id="descricao"
                         className="border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
-                        value={descricao}
                         placeholder="Descrição do ambiente"
-                        onChange={(e) => setDescricao(e.target.value)}
+                        {...register("descricao")}
+                        onFocus={() => clearErrors("root")}
                     />
+                    {errors.descricao && (
+                        <p
+                            className="text-red-500 text-sm mt-1"
+                            role="alert">
+                            {errors.descricao.message}
+                        </p>
+                    )}
 
                     <label htmlFor="ni"
                         className="mt-[2rem]">
                         Informe o NI do ambiente
                     </label>
                     <input
-                        name="ni"
+                        id="ni"
                         className="border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
-                        value={ni}
                         placeholder="Ni do ambiente"
-                        onChange={(e) => setNi(e.target.value)}
+                        {...register("ni")}
+                        onFocus={() => clearErrors("root")}
                     />
+                    {errors.ni && (
+                        <p
+                            className="text-red-500 text-sm mt-1"
+                            role="alert">
+                            {errors.ni.message}
+                        </p>
+                    )}
 
                     <label htmlFor="responsavel"
                         className="mt-[2rem]">
                         Informe o responsável do ambiente
                     </label>
                     <input
-                        name="responsavel"
+                        id="responsavel"
                         className="border-2 border-black rounded-[12px] w-[25rem] h-[2.5rem] pl-[1rem]"
-                        value={responsavel}
                         placeholder="Responsável do ambiente"
-                        onChange={(e) => setResponsavel(e.target.value)}
+                        {...register("responsavel")}
+                        onFocus={() => clearErrors("root")}
                     />
+                    {errors.responsavel && (
+                        <p
+                            className="text-red-500 text-sm mt-1"
+                            role="alert">
+                            {errors.responsavel.message}
+                        </p>
+                    )}
 
                 </fieldset>
 
                 {/* Área do botão de salvar */}
                 <div className="flex items-center justify-center mt-[3rem]">
-                    <button id="botao_envioh"
+                    <button
                         className="bg-black text-white p-[0.5rem] w-[25rem] h-[2.5rem] rounded-[16px] duration-200 easy-in-out hover:scale-110 text-[18px] cursor-pointer"
-                        type="submit"
-                        onClick={selectedAmbiente ? editAmbiente : newAmbiente}>Salvar
+                        type="submit">
+                        Salvar
                     </button>
                 </div>
 
@@ -163,7 +216,8 @@ export function ModalAmbientes({
                 <div className="flex items-center justify-center text-2xl pb-[4vh] pt-[4vh]">
                     <button
                         className="duration-75 ease-in-out hover:scale-125 cursor-pointer"
-                        onClick={onClose}>
+                        onClick={onClose}
+                        aria-label="Botão de fechar modal">
                         < IoIosCloseCircle
                             className="text-5xl"
                         />
@@ -171,6 +225,6 @@ export function ModalAmbientes({
                 </div>
 
             </form>
-        </div>
+        </section>
     )
-}
+};

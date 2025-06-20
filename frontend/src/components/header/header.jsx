@@ -51,4 +51,4 @@ export function Header() {
         </header>
 
     )
-}
+};
