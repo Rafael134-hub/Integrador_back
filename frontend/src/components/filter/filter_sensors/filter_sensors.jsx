@@ -139,12 +139,14 @@ export function FilterSensores({
                         <div className="flex items-center justify-between mt-[2.5rem]">
                             <button>
                                 <RiResetLeftLine
+                                    aria-label="Botão de limpar filtros"
                                     className="text-4xl cursor-pointer"
                                     onClick={cleanFilter} />
                             </button>
 
                             <button>
                                 <IoIosCloseCircle
+                                    aria-label="Botão de fechar filtro"
                                     className="text-4xl cursor-pointer"
                                     onClick={() => setOpenFilter(false)} />
                             </button>

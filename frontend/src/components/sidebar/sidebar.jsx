@@ -94,17 +94,19 @@ export function Sidebar({ selectedPage }) {
                             </nav>
 
                             {/* Opção de LogOut/ sair */}
-                            <ul className="w-full mb-[2rem]">
+                            <ul className="w-full mb-[2rem]"
+                                tabIndex={0}>
                                 <li
-                                    onClick={logout}
+                                    tabIndex={0}
                                     className="w-full flex items-center justify-between pl-[2rem] pr-[2rem] hover:bg-[#298287] hover:text-white pb-[1.5rem] pt-[1.5rem] cursor-pointer transition-all duration-200 ease-in-out transform">
 
-                                    <div className="flex items-center justify-between">
+                                    <button className="flex items-center justify-between"
+                                        onClick={logout}>
                                         <IoLogOut
                                             className="h-[2rem]  w-[2rem] mr-[2rem]" />
 
                                         <p>Sair</p>
-                                    </div>
+                                    </button>
 
                                 </li>
                             </ul>
@@ -155,7 +157,8 @@ export function Sidebar({ selectedPage }) {
                             </nav>
 
                             {/* Opção de LogOut/ sair */}
-                            <ul className="w-full mb-[2rem]">
+                            <ul className="w-full mb-[2rem]"
+                                tabIndex={0}>
                                 <li
                                     onClick={logout}
                                     className="w-full flex items-center justify-center hover:bg-[#298287] hover:text-white pb-[1.5rem] pt-[1.5rem] cursor-pointer transition-all duration-200 ease-in-out transform">

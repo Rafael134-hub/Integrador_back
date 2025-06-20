@@ -302,7 +302,8 @@ export function ModalHistoricos({
                 <div className="flex items-center justify-center text-2xl pb-[4vh] pt-[4vh]">
                     <button
                         className="duration-75 ease-in-out hover:scale-125 cursor-pointer"
-                        onClick={onClose}>
+                        onClick={onClose}
+                        aria-label="Botão de fechar modal">
                         < IoIosCloseCircle
                             className="text-5xl"
                         />
