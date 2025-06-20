@@ -1,5 +1,26 @@
-<h1>My URLs: 🍥🍜🍣</h1>
+<h1>About Orbisense: 👾👾🤖🤖🦾</h1>
 
+<p>
+  Have you ever imagined a place where important decisions could be made based on reliable and intelligent data? Now imagine if there were a central hub for all this data, making knowledge clear and, above all,     accessible. Sounds like a dream, right? But this isn't a dream — this is **Smart City**, where cutting-edge technologies like sensors and an online platform come together to offer a clear and simplified experience for accessing information.
+  All of this may seem like something from the future, but **the future is now** — and that's where **Orbisense** comes in.
+  Our mission is to meet the needs of our users: all those who manage the sensors and environments of the **Senai Roberto Mange Institute**. We strive to deliver a seamless and simple experience through our platform!
+</p>
+
+<h2>How to start the Back End:</h2>
+<h3>Open the project, go to the back folder, open the CMD, and use the commands:</h3>
+<h3>py -m venv env</h3>
+<h3>env\scripts\activate</h3>
+<h3>pip install -r requirements.txt</h3>
+<h3>py manage.py runserver</h3>
+
+<h2>How to start the Front End:</h2>
+<h3>>Open the project, go to the frontend folder, open the CMD, and use the commands:</h3>
+<h3>npm i</h3>
+<h3>npm run dev</h3>
+
+
+
+<h2>The Back End URLs:</h2>h2>
 <h2>User & Password</h2>
 <h3>User</h3>
 <p>Rafael2</p>
