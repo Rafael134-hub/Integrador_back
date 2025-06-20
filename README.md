@@ -14,7 +14,7 @@
 <h3>py manage.py runserver</h3>
 
 <h2>How to start the Front End:</h2>
-<h3>>Open the project, go to the frontend folder, open the CMD, and use the commands:</h3>
+<h3>Open the project, go to the frontend folder, open the CMD, and use the commands:</h3>
 <h3>npm i</h3>
 <h3>npm run dev</h3>
 
